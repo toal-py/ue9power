@@ -51,11 +51,9 @@ def getClosestDataSet (set,cts,orig):
         if orig == True:
             if elem[0] == cts:
                 return (elem[1])
-                break
         else:
             if elem[0] == cts:
                 return (elem[2])
-                break
       
 #get data sets to corresponding timestamps
 resClosestDatasetTD = getClosestDataSet(dataSetList,resClosestTimestampTD,True)
