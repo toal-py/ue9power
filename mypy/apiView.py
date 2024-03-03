@@ -13,7 +13,7 @@ import re
 @cache_page(21600)
 def powerApi(request):
     
-    dotenv.read_dotenv('/var/www/python-project/dashbo/.env') 
+    dotenv.read_dotenv('/var/www/python-project/ue9power/.env') 
     
     def result():
 

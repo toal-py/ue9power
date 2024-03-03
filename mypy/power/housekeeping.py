@@ -4,7 +4,7 @@ import cClasses
 import os
 import dotenv
 
-dotenv.read_dotenv('/var/www/python-project/dashbo/.env')
+dotenv.read_dotenv('/var/www/python-project/ue9power/.env')
 
 #connection & cursor
 conn = psycopg.connect(os.environ.get('POSTGRES_CONNECT_DB_POWER'))

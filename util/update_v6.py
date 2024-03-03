@@ -3,8 +3,8 @@ import dotenv
 import os
 import sys
 
-sys.path.append('/var/www/python-project/dashbo/mypy/power')
-dotenv.read_dotenv('/var/www/python-project/dashbo/.env')
+sys.path.append('/var/www/python-project/ue9power/mypy/power')
+dotenv.read_dotenv('/var/www/python-project/ue9power/.env')
 
 import cClasses
 

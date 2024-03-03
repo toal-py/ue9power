@@ -5,7 +5,7 @@ import os
 import dotenv
 import os
 
-dotenv.read_dotenv('/var/www/python-project/dashbo/.env')
+dotenv.read_dotenv('/var/www/python-project/ue9power/.env')
 
 class logging:
     def __init__(self, absTD, absYD, origTD, origYD, refDate):

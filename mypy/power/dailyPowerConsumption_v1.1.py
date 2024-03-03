@@ -6,7 +6,7 @@ import dotenv
 from datetime import datetime, date, timedelta
 import cClasses
 
-dotenv.read_dotenv('/var/www/python-project/dashbo/.env')
+dotenv.read_dotenv('/var/www/python-project/ue9power/.env')
 #connection with returning a dict. Basically obsolete as I could fetch 'val' in a tuple as well
 conn = psycopg.connect(os.environ.get('POSTGRES_CONNECT_DB_POWER'), row_factory=dict_row)
 

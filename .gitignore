@@ -1,3 +1,5 @@
 .env
 nginx/fullchain.pem
 nginx/privkey.pem
+mypy/power/dailyPowerConsumption.py
+docker-compose.dev.yml

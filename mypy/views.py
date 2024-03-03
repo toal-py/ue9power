@@ -19,7 +19,8 @@ def homeView(request):
 # GET current weather
 
 def getCurrentWeather(request):
-    currentWeatherRaw = requests.get('https://api.openweathermap.org/data/2.5/weather?lat=51.3482056&lon=7.1160019&appid=2307e51bd1c2969e519371f325ee9198&units=metric&lang=de')
+    id = os.environ.get('WEATHER_API_ID')
+    currentWeatherRaw = requests.get(f'https://api.openweathermap.org/data/2.5/weather?lat=51.3482056&lon=7.1160019&appid={id}&units=metric&lang=de')
     currentWeather = currentWeatherRaw.json()
     htmlOutput = (f"<p>Es sind gerade: {str(currentWeather['main']['temp']).replace('.', ',')}°C</p><p><a href='/'>Zurück</a></p>")
     return HttpResponse(htmlOutput)
@@ -52,7 +53,7 @@ def site_pregOverview(request):
 
 @cache_page(21600)
 def powerOverview (request):
-    dotenv.read_dotenv('/var/www/python-project/dashbo/.env')
+    dotenv.read_dotenv('/var/www/python-project/ue9power/.env')
     #different connect info in .env because of render_to_string which results in multiple quotes (""host")
     conn = psycopg.connect(os.environ.get('POSTGRES_VIEWS'))
     cur=conn.cursor()
