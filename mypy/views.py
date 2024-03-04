@@ -5,6 +5,7 @@ import requests
 import json
 from django.template.loader import render_to_string
 from datetime import datetime, date
+import calendar
 import dotenv
 import psycopg
 import os
@@ -65,13 +66,20 @@ def powerOverview (request):
     m=cur.fetchone()
     month = m[0] if (m) else 'Bisher kein Monat in der DB'
     mPower = m[1] if (m) else 'Bisher keine Daten in der DB'
+    
+    def extrapolation():
+        currentMonth = (requests.get('https://web.toal.wtf/power/api?mode=m')).json()
+        meanValue = currentMonth['preliminary_power_consumption'] / len(currentMonth['result'])
+        return round(((calendar.monthrange(date.today().year, date.today().month)[1] - len(currentMonth['result'])) * meanValue), 2)
+    
     contextPower={
         'day':d[0],
         'dPower':d[1],
         'week':w[0],
         'wPower':w[1],
         'month':month,
-        'mPower':mPower
+        'mPower':mPower,
+        'extrapolationCurrentMonth':extrapolation()
     }
     return (HttpResponse(render_to_string('powerOverview.html', context=contextPower)))
 

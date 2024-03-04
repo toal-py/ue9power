@@ -4,7 +4,7 @@ from datetime import datetime,date
 import dotenv
 import os
 #connection to DB 'power'
-dotenv.read_dotenv('/var/www/python-project/ue9power/.env')
+dotenv.read_dotenv('/env/.env')
 #dotenv.read_dotenv()
 conn = psycopg.connect(os.environ.get('POSTGRES_CONNECT_DB_POWER'))
 cur = conn.cursor()
