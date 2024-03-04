@@ -68,7 +68,7 @@ def powerOverview (request):
     mPower = m[1] if (m) else 'Bisher keine Daten in der DB'
     
     def extrapolation():
-        currentMonth = (requests.get('https://web.toal.wtf/power/api?mode=m')).json()
+        currentMonth = (requests.get('/power/api?mode=m')).json()
         meanValue = currentMonth['preliminary_power_consumption'] / len(currentMonth['result'])
         return round(((calendar.monthrange(date.today().year, date.today().month)[1] - len(currentMonth['result'])) * meanValue), 2)
     
