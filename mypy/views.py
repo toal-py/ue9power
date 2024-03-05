@@ -67,7 +67,7 @@ def powerOverview (request):
     cur.close()
     conn.close()
 
-    cm = (requests.get('https://web.toal.wtf/power/api?mode=m')).json()
+    cm = (requests.get('https://web.toal.wtf/power/api?mode=m', verify=False)).json()
 
     def extrapolation(x):        
         meanValue = x['preliminary_power_consumption'] / len(x['result'])
