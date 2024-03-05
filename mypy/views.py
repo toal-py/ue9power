@@ -11,7 +11,11 @@ import psycopg
 import os
 from django.views.decorators.cache import cache_page
 
-
+def getCurrentIPv6():
+    try:
+        return requests.get('https://api6.ipify.org', timeout=5).text
+    except requests.exceptions.ConnectionError:
+        return None
 
 def homeView(request):
     htmlString = "<h1>Hello World</h1><p><a href='/power'>Hier geht es zum letzten Stromverbrauch</a></p><p><a href='/current-weather'>Hier geht es zur aktuellen Temperatur</a></p><p><a href='/preg'>Hier geht es zum Schwangerschaftsüberblick</a></p>" 
@@ -67,7 +71,9 @@ def powerOverview (request):
     month = m[0] if (m) else 'Bisher kein Monat in der DB'
     mPower = m[1] if (m) else 'Bisher keine Daten in der DB'
     
-    cm = (requests.get('https://192.168.178.61/power/api?mode=m')).json()
+    ip6 = getCurrentIPv6()
+    if ip6 is not None:
+        cm = (requests.get(f'http://[{ip6}]/power/api?mode=m')).json()
 
     def extrapolation(x):        
         meanValue = x['preliminary_power_consumption'] / len(x['result'])
