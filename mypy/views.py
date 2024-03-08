@@ -9,7 +9,6 @@ import calendar
 import dotenv
 import psycopg
 import os
-from time import sleep
 from django.views.decorators.cache import cache_page
 
 def homeView(request):
@@ -67,8 +66,6 @@ def powerOverview (request):
     mPower = m[1] if (m) else 'Bisher keine Daten in der DB'
     cur.close()
     conn.close()
-
-    sleep(2)
 
     cm = (requests.get('https://web.toal.wtf/power/api?mode=m', verify=False)).json()
 

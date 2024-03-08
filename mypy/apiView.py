@@ -151,7 +151,7 @@ def powerApi(request):
                             jsonRes = {'success': 'true', 'full_month': 'true', 'expand': 'false', 'result': {'month_year': res[0], 'month_short_name': res[1], 'power_consumption': res[2], 'comment': res[3] if res[3] is not None else ''}}
                     #partial month: TypeError is caught to return a different format. Includes power consumption up to the last available day.
                     except TypeError:
-                        cur.execute(sql.SQL(f"SELECT date, power_consumption FROM daily_power WHERE REGEXP_LIKE(date,'^(3[01]|[12][0-9]|0[1-9]).{month}.{year}$');"))
+                        cur.execute(sql.SQL(f"SELECT date, power_consumption FROM daily_power WHERE REGEXP_LIKE(date,'^(3[01]|[12][0-9]|0[1-9]).{month}.{year}$') ORDER BY id ASC;"))
                         res = cur.fetchall()
                         result = {}
                         prelimPC = 0.0
