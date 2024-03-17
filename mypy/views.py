@@ -75,6 +75,10 @@ def powerOverview (request):
         meanValue = x['preliminary_power_consumption'] / len(x['result'])
         return round(((calendar.monthrange(date.today().year, date.today().month)[1] - len(x['result'])) * meanValue), 2) + x['preliminary_power_consumption']
     
+    ep = extrapolation(cm)
+
+    clm = round((int(1 - (mPower / ep))), 2)
+
     contextPower={
         'day':d[0],
         'dPower':d[1],
@@ -82,7 +86,8 @@ def powerOverview (request):
         'wPower':w[1],
         'month':month,
         'mPower':mPower,
-        'extrapolationCurrentMonth':extrapolation(cm)
+        'extrapolationCurrentMonth':ep,
+        'compLastMonth':clm
     }
     return (HttpResponse(render_to_string('powerOverview.html', context=contextPower)))
 
