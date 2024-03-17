@@ -11,6 +11,8 @@ import psycopg
 import os
 from django.views.decorators.cache import cache_page
 
+from mypy.apiInternal import apiCall
+
 def homeView(request):
     htmlString = "<h1>Hello World</h1><p><a href='/power'>Hier geht es zum letzten Stromverbrauch</a></p><p><a href='/current-weather'>Hier geht es zur aktuellen Temperatur</a></p><p><a href='/preg'>Hier geht es zum Schwangerschaftsüberblick</a></p>" 
     return HttpResponse(htmlString)
@@ -50,7 +52,7 @@ def site_pregOverview(request):
     pregOverview = render_to_string('preg_overview.html', context=context_preg)
     return HttpResponse(pregOverview)
 
-@cache_page(21600)
+#@cache_page(21600)
 def powerOverview (request):
     dotenv.read_dotenv('/var/www/python-project/ue9power/.env')
     #different connect info in .env because of render_to_string which results in multiple quotes (""host")
@@ -67,7 +69,7 @@ def powerOverview (request):
     cur.close()
     conn.close()
 
-    cm = (requests.get('https://web.toal.wtf/power/api?mode=m', verify=False)).json()
+    cm = apiCall(mode = m)
 
     def extrapolation(x):        
         meanValue = x['preliminary_power_consumption'] / len(x['result'])
