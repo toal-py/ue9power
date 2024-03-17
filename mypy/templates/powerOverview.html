@@ -3,15 +3,7 @@
     <p><b>{{ day }}</b>: {{ dPower }} kWh</p>
     <p><b>{{ week }}</b>: {{ wPower }} kWh</p>
     <p><b>{{ month }}</b>: {{ mPower }} kWh <br>
-    Hochrechnung: {{ extrapolationCurrentMonth }} kWh bei weiterhin ähnlichem Verbrauch(
-        {{ compLastMonthPercent }} %
-        {% if compLastMonth < 1 %}
-        weniger
-        {% else %}
-        mehr
-        {% endif %}
-        als letzten Monat
-    ).
+    <i><u>Hochrechnung:</u> {{ extrapolationCurrentMonth }} kWh bei weiterhin ähnlichem Verbrauch({{ compLastMonthPercent }} %{% if compLastMonth < 0 %} weniger{% else %} mehr{% endif %} als letzten Monat).</i>
     </p>
 </p>
 <p><a href='/'>Zurück</a></p>

@@ -87,7 +87,7 @@ def powerOverview (request):
         'month':month,
         'mPower':mPower,
         'extrapolationCurrentMonth':ep,
-        'compLastMonthPercent':abs(clm) * 100,
+        'compLastMonthPercent':round((abs(clm) * 100), 2),
         'compLastMonth':clm
     }
     return (HttpResponse(render_to_string('powerOverview.html', context=contextPower)))
