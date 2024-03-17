@@ -69,12 +69,11 @@ def powerOverview (request):
     cur.close()
     conn.close()
 
-    cm = apiCall(mode = 'm')
+    cm = json.loads(apiCall(mode = 'm'))
 
-    def extrapolation(x):        
-        json.loads(x)
+    def extrapolation(x):
         meanValue = x['preliminary_power_consumption'] / len(x['result'])
-        return round(((calendar.monthrange(date.today().year, date.today().month)[1] - len(x['result'])) * meanValue), 2)
+        return round(((calendar.monthrange(date.today().year, date.today().month)[1] - len(x['result'])) * meanValue), 2) + x['preliminary_power_consumption']
     
     contextPower={
         'day':d[0],
