@@ -77,7 +77,7 @@ def powerOverview (request):
     
     ep = extrapolation(cm)
 
-    clm = round((int(1 - (mPower / ep))), 2)
+    clm = round((1 - (int(mPower / ep))), 2)
 
     contextPower={
         'day':d[0],
