@@ -69,7 +69,7 @@ def powerOverview (request):
     cur.close()
     conn.close()
 
-    cm = apiCall(mode = m)
+    cm = apiCall(mode = 'm')
 
     def extrapolation(x):        
         meanValue = x['preliminary_power_consumption'] / len(x['result'])
