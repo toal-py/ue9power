@@ -4,7 +4,7 @@ from django.http import HttpResponse
 import requests
 import json
 from django.template.loader import render_to_string
-from datetime import datetime, date
+from datetime import datetime, date, timedelta
 import calendar
 import dotenv
 import psycopg
@@ -77,7 +77,23 @@ def powerOverview (request):
     
     ep = extrapolation(cm)
 
-    clm = 1 - (float(mPower) / float(ep))
+    def adjustMPower(mp):
+        currentMonth = calendar.monthrange(date.today().year, date.today().month)[1]
+        lastMonth = calendar.monthrange(date.today().year, ((date.today().replace(day=1))-timedelta(1)).month)[1]
+
+        if type(mp) is not float:
+            mp = float(mp)
+
+        if lastMonth != currentMonth:
+            adjmp = (mp / lastMonth) * currentMonth
+        else:
+            adjmp = mp
+
+        return adjmp
+    
+    normMPower = adjustMPower(mPower)
+
+    clm = 1 - (normMPower / float(ep))
 
     contextPower={
         'day':d[0],
