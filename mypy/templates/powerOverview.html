@@ -4,7 +4,7 @@
     <p><b>{{ week }}</b>: {{ wPower }} kWh</p>
     <p><b>{{ month }}</b>: {{ mPower }} kWh <br>
     Hochrechnung: {{ extrapolationCurrentMonth }} kWh bei weiterhin ähnlichem Verbrauch(
-        {{ compLastMonth }} %
+        {{ compLastMonthPercent }} %
         {% if compLastMonth < 1 %}
         weniger
         {% else %}
