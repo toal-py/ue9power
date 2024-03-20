@@ -1,4 +1,4 @@
-# dashbo
+# All around my power consumption
 <p>Most relevant directory:</p>
 <h2><a href='https://github.com/toal-py/dashbo/tree/main/mypy/power'>mypy/power</a></h2>
 <p>Everything in here is based on a Tasmota Power Reader. This device pushes power consumption data via MQTT to my Raspberry Pi where ioBroker handles and saves the incoming data. This data is the basis for all following calculations of my power consumption.</p>
