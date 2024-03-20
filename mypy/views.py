@@ -12,6 +12,7 @@ import os
 from django.views.decorators.cache import cache_page
 
 from mypy.apiInternal import apiCall
+from mypy.plotView import renderPlot
 
 def homeView(request):
     htmlString = "<h1>Hello World</h1><p><a href='/power'>Hier geht es zum letzten Stromverbrauch</a></p><p><a href='/current-weather'>Hier geht es zur aktuellen Temperatur</a></p><p><a href='/preg'>Hier geht es zum Schwangerschaftsüberblick</a></p>" 
@@ -95,6 +96,10 @@ def powerOverview (request):
 
     clm = 1 - (normMPower / float(ep))
 
+    test_dict = {'22.01.2024': 6.55, '23.01.2024': 4.75, '24.01.2024': 11.92}
+
+    plot = renderPlot(test_dict)
+
     contextPower={
         'day':d[0],
         'dPower':d[1],
@@ -104,7 +109,8 @@ def powerOverview (request):
         'mPower':mPower,
         'extrapolationCurrentMonth':ep,
         'compLastMonthPercent':round((abs(clm) * 100), 2),
-        'compLastMonth':clm
+        'compLastMonth':clm,
+        'plot':plot
     }
     return (HttpResponse(render_to_string('powerOverview.html', context=contextPower)))
 
