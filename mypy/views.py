@@ -53,7 +53,7 @@ def site_pregOverview(request):
     pregOverview = render_to_string('preg_overview.html', context=context_preg)
     return HttpResponse(pregOverview)
 
-@cache_page(21600)
+#@cache_page(21600)
 def powerOverview (request):
     dotenv.read_dotenv('/var/www/python-project/ue9power/.env')
     #different connect info in .env because of render_to_string which results in multiple quotes (""host")

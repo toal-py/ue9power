@@ -10,7 +10,7 @@ from psycopg import sql
 import os
 import re
 
-@cache_page(21600)
+#@cache_page(21600)
 def powerApi(request):
     
     dotenv.read_dotenv('/var/www/python-project/ue9power/.env') 
