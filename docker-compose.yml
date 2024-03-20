@@ -29,7 +29,7 @@ services:
     image: redis:latest
     environment:
       - REDIS_USER=cache
-      - REDIS_PASSWORD=cache_h482bryy
+      - REDIS_PASSWORD=cache_cache
     expose:
       - 6379
     depends_on:
