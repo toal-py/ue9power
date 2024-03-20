@@ -10,6 +10,6 @@ def renderPlot(data):
     plotFigure = plot.get_figure()
     plotFigure.savefig(plotFile, format='png')
     encodedFile = base64.b64encode(plotFile.getvalue())
-    return encodedFile
+    return encodedFile.decode('utf-8')
 
 #test_dict = {'22.01.2024': 6.55, '23.01.2024': 4.75, '24.01.2024': 11.92}
