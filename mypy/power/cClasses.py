@@ -35,7 +35,7 @@ class mailing:
         message["Subject"] = self.subjectContent
         message["From"] = self.sender
         message["To"] = self.receiver
-        message.attach(MIMEText(self.messageContent, 'plain'))
+        message.attach(MIMEText(self.messageContent, 'html'))
         with smtplib.SMTP_SSL("smtp.strato.de", 465) as server:
             server.login(self.login, self.password)
             server.sendmail(self.sender, self.receiver, message.as_string())
