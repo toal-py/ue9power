@@ -96,7 +96,9 @@ def powerOverview (request):
 
     clm = 1 - (normMPower / float(ep))
 
-    plot = renderPlot(cm['result'])
+    shortFormatDays = {elem[0][-10:-8]:elem[1] for elem in cm['result'].items()}
+    
+    plot = renderPlot(shortFormatDays)
 
     contextPower={
         'day':d[0],
