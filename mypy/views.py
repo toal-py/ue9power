@@ -79,14 +79,14 @@ def powerOverview (request):
     ep = extrapolation(cm)
 
     def adjustMPower(mp):
-        currentMonth = calendar.monthrange(date.today().year, date.today().month)[1]
-        lastMonth = calendar.monthrange(date.today().year, ((date.today().replace(day=1))-timedelta(1)).month)[1]
+        daysCurrentMonth = calendar.monthrange(date.today().year, date.today().month)[1]
+        daysLastMonth = calendar.monthrange(date.today().year, ((date.today().replace(day=1))-timedelta(1)).month)[1]
 
         if type(mp) is not float:
             mp = float(mp)
 
-        if lastMonth != currentMonth:
-            adjmp = (mp / lastMonth) * currentMonth
+        if daysLastMonth != daysCurrentMonth:
+            adjmp = (mp / daysLastMonth) * daysCurrentMonth
         else:
             adjmp = mp
 
