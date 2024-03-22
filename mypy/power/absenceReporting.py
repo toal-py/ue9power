@@ -4,11 +4,14 @@ import calendar
 import dotenv
 import psycopg
 import os
+import sys
 import json
 import cClasses
-from mypy.apiInternal import apiCall
 
 dotenv.read_dotenv('/var/www/python-project/ue9power/.env')
+sys.path.append('/var/www/python-project/ue9power/mypy')
+from mypy.apiInternal import apiCall
+
 conn = psycopg.connect(os.environ.get('POSTGRES_CONNECT_DB_POWER'))
 cur = conn.cursor()
 
