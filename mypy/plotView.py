@@ -8,6 +8,7 @@ def renderPlot(data):
     plot = sns.barplot(data=data, x = list(data.keys()), y = power)
     plotFile = BytesIO()
     plotFigure = plot.get_figure()
+    plotFigure.set_figwidth(10)
     plotFigure.savefig(plotFile, format='png')
     encodedFile = base64.b64encode(plotFile.getvalue())
     return encodedFile.decode('utf-8')
