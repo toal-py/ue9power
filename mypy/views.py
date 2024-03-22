@@ -96,9 +96,7 @@ def powerOverview (request):
 
     clm = 1 - (normMPower / float(ep))
 
-    test_dict = {'22.01.2024': 6.55, '23.01.2024': 4.75, '24.01.2024': 11.92}
-
-    plot = renderPlot(test_dict)
+    plot = renderPlot(cm['result'])
 
     contextPower={
         'day':d[0],
