@@ -10,7 +10,7 @@ import cClasses
 
 dotenv.read_dotenv('/var/www/python-project/ue9power/.env')
 sys.path.append('/var/www/python-project/ue9power/mypy')
-from mypy.apiInternal import apiCall
+from apiInternal import apiCall
 
 conn = psycopg.connect(os.environ.get('POSTGRES_CONNECT_DB_POWER'))
 cur = conn.cursor()
