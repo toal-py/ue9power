@@ -57,4 +57,4 @@ class error_log:
             time = sql.Literal(self.time)
             )
         )
-        print (query)
+        return query
