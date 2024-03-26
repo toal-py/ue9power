@@ -120,7 +120,7 @@ def powerApiDoc (request):
 
 def dev (request):
     conn = psycopg.connect(os.environ.get('POSTGRES_CONNECT_DB_POWER'))
-    cur = conn.cursor()
+    cur = conn.ClientCursor()
     test = error_log('connection', 'there was a lot happening', 400, datetime.now().isoformat(sep=" ", timespec="seconds"))
     mo = test.log()
     moo = cur.mogrify(mo)
