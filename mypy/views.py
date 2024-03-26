@@ -120,4 +120,4 @@ def powerApiDoc (request):
 
 def dev (request):
     test = error_log('connection', 'there was a lot happening', 400, datetime.now().isoformat(sep=" ", timespec="seconds"))
-    return (HttpResponse(f'{test.log()}'))
+    return (HttpResponse(f'<h1>{test.log()}</h1>'))
