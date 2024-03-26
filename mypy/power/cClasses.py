@@ -1,9 +1,10 @@
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+import psycopg
+from psycopg import sql
 import os
 import dotenv
-import os
 
 dotenv.read_dotenv('/var/www/python-project/ue9power/.env')
 
@@ -39,3 +40,21 @@ class mailing:
         with smtplib.SMTP_SSL("smtp.strato.de", 465) as server:
             server.login(self.login, self.password)
             server.sendmail(self.sender, self.receiver, message.as_string())
+
+class error_log:
+
+    def __init__(self, type, description, level, time):
+        self.type = type
+        self.description = description
+        self.level = level
+        self.time = time
+
+    def log(self):
+        query = (sql.SQL('INSERT INTO error_log (type, description, level, time) VALUES ({type}, {description}, {level}, {time}) ;').format(
+            type = sql.Literal(self.type), 
+            description = sql.Literal(self.description), 
+            level = sql.Literal(self.level),
+            time = sql.Literal(self.time)
+            )
+        )
+        print (query)
