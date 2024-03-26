@@ -8,6 +8,7 @@ from datetime import datetime, date, timedelta
 import calendar
 import dotenv
 import psycopg
+from psycopg import ClientCursor
 import os
 from django.views.decorators.cache import cache_page
 
@@ -120,8 +121,10 @@ def powerApiDoc (request):
 
 def dev (request):
     conn = psycopg.connect(os.environ.get('POSTGRES_CONNECT_DB_POWER'))
-    cur = conn.ClientCursor()
+    cur = psycopg.ClientCursor(conn)
     test = error_log('connection', 'there was a lot happening', 400, datetime.now().isoformat(sep=" ", timespec="seconds"))
     mo = test.log()
     moo = cur.mogrify(mo)
+    cur.close()
+    conn.close()
     return (HttpResponse(f'<h1>{moo}</h1>'))
