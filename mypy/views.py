@@ -119,5 +119,7 @@ def powerApiDoc (request):
     return (HttpResponse(render_to_string('powerApiDoc.html')))
 
 def dev (request):
+    conn = psycopg.connect(os.environ.get('POSTGRES_CONNECT_DB_POWER'))
+    cur = conn.cursor()
     test = error_log('connection', 'there was a lot happening', 400, datetime.now().isoformat(sep=" ", timespec="seconds"))
-    return (HttpResponse(f'<h1>{test.log()}</h1>'))
+    return (HttpResponse(f'<h1>{cur.mogrify(test.log())}</h1>'))
