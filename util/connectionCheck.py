@@ -13,7 +13,7 @@ import cClasses
 try:
     response = requests.get('https://web.toal.wtf')
 
-except Exception as e:
+except NewConnectionError as e:
     queryObj = cClasses.errorLog('connection', f'{e}', 400, datetime.now().isoformat(sep=" ", timespec="seconds"))
     query = queryObj.log()
 
