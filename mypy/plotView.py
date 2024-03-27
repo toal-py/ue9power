@@ -7,7 +7,7 @@ def renderPlot(data):
     colorPal = ['red' if elem > 9.0 else 'orange' if elem >= 5.0 else 'green' for elem in data.values()]
     power = [float(elem) for elem in data.values()]
     plot = sns.barplot(data=data, x = list(data.keys()), y = power, palette=colorPal, hue=list(data.keys()), legend=False)
-    plot.bar_label(plot.containers[0], fontsize=8)
+    plot.bar_label(plot.container[0], fontsize=8)
     plotFile = BytesIO()
     plotFigure = plot.get_figure()
     plotFigure.set_figwidth(10)
