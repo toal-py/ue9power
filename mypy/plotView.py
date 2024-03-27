@@ -4,8 +4,9 @@ import base64
 
 
 def renderPlot(data):
+    colorPal = ['red' if elem > 9.0 else 'orange' if elem >= 5.0 else 'green' for elem in data.values()]
     power = [float(elem) for elem in data.values()]
-    plot = sns.barplot(data=data, x = list(data.keys()), y = power)
+    plot = sns.barplot(data=data, x = list(data.keys()), y = power, palette=colorPal)
     plot.bar_label(plot.containers[0], fontsize=8)
     plotFile = BytesIO()
     plotFigure = plot.get_figure()
