@@ -6,7 +6,7 @@ import base64
 def renderPlot(data):
     power = [float(elem) for elem in data.values()]
     plot = sns.barplot(data=data, x = list(data.keys()), y = power)
-    plot.bar_label(plot.containers[0])
+    plot.bar_label(plot.containers[1])
     plotFile = BytesIO()
     plotFigure = plot.get_figure()
     plotFigure.set_figwidth(10)
