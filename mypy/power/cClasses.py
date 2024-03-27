@@ -41,7 +41,7 @@ class mailing:
             server.login(self.login, self.password)
             server.sendmail(self.sender, self.receiver, message.as_string())
 
-class error_log:
+class errorLog:
 
     def __init__(self, type, description, level, time):
         self.type = type

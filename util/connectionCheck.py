@@ -1,20 +1,28 @@
 from datetime import datetime
 import psycopg
-from psycopg import sql
 import requests
+import os
+import sys
+import dotenv
+
+dotenv.read_dotenv('/var/www/python-project/ue9power/.env')
+sys.path.append('/var/www/python-project/ue9power/mypy/power')
+
+import cClasses
 
 try:
     response = requests.get('https://web.toal.wtf')
-    if response.status_code == 200:
-        pass
-    elif response.status_code != 200:
-        description = f'HTTP error: {response.status_code}'
+
 except Exception as e:
-    type = 'connection'
-    description = ''
-    degree = 400
-    time = datetime.now().isoformat(sep=" ", timespec="seconds")
+    queryObj = cClasses.errorLog('connection', f'{e}', 400, datetime.now().isoformat(sep=" ", timespec="seconds"))
+    query = queryObj.log()
 
+    conn = psycopg.connect(os.environ.get('POSTGRES_CONNECT_DB_POWER'))
+    cur = conn.cursor()
 
-dates = '12.02.2024'
-print((sql.SQL('SELECT date,power_consumption,comment FROM daily_power WHERE date = {dates};').format(dates=sql.Literal(dates))))
+    cur.execute(query)
+    conn.commit()
+
+    cur.close()
+    conn.close()
+    

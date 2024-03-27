@@ -14,7 +14,7 @@ from django.views.decorators.cache import cache_page
 
 from mypy.apiInternal import apiCall
 from mypy.plotView import renderPlot
-from mypy.power.cClasses import error_log
+from mypy.power.cClasses import errorLog
 
 def homeView(request):
     htmlString = "<h1>Hello World</h1><p><a href='/power'>Hier geht es zum letzten Stromverbrauch</a></p><p><a href='/current-weather'>Hier geht es zur aktuellen Temperatur</a></p><p><a href='/preg'>Hier geht es zum Schwangerschaftsüberblick</a></p>" 
@@ -122,7 +122,7 @@ def powerApiDoc (request):
 def dev (request):
     conn = psycopg.connect(os.environ.get('POSTGRES_CONNECT_DB_POWER'))
     cur = psycopg.ClientCursor(conn)
-    test = error_log('connection', 'there was a lot happening', 400, datetime.now().isoformat(sep=" ", timespec="seconds"))
+    test = errorLog('connection', 'there was a lot happening', 400, datetime.now().isoformat(sep=" ", timespec="seconds"))
     mo = test.log()
     moo = cur.mogrify(mo)
     cur.close()
