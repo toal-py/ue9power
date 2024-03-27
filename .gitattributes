@@ -1,1 +1,3 @@
-mypy/settings.py merge=ours
+./mypy/settings.py merge=ours
+./mypy/urls.py merge=ours
+./mypy/views.py merge=ours
