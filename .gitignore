@@ -4,3 +4,6 @@
 /mypy/power/dailyPowerConsumption.py
 /docker-compose.dev.yml
 /Python-3.12.0
+/lib
+/mypy/power/logValues.txt
+/mypy/__pycache__
