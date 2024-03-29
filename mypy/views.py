@@ -98,7 +98,7 @@ def powerOverview (request):
     clm = 1 - (normMPower / float(ep))
 
     #check for first of month. Extrapolation doesn't work on that day.
-    dayOfMonth = 1 #date.today().day
+    dayOfMonth = 4 #date.today().day
 
     #plot
     shortFormatDays = {elem[0][-10:-8]:elem[1] for elem in cm['result'].items()}
