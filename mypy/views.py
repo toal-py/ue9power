@@ -70,6 +70,7 @@ def powerOverview (request):
     cur.close()
     conn.close()
 
+    #extrapolation
     cm = json.loads(apiCall(mode = 'm'))
 
     def extrapolation(x):
@@ -96,9 +97,14 @@ def powerOverview (request):
 
     clm = 1 - (normMPower / float(ep))
 
+    #check for first of month. Extrapolation doesn't work on that day.
+    dayOfMonth = date.today().day
+
+    #plot
     shortFormatDays = {elem[0][-10:-8]:elem[1] for elem in cm['result'].items()}
     
     plot = renderPlot(shortFormatDays)
+
 
     contextPower={
         'day':d[0],
@@ -110,7 +116,8 @@ def powerOverview (request):
         'extrapolationCurrentMonth':ep,
         'compLastMonthPercent':round((abs(clm) * 100), 2),
         'compLastMonth':clm,
-        'plot':plot
+        'plot':plot,
+        'dayOfMonth':dayOfMonth
     }
     return (HttpResponse(render_to_string('powerOverview.html', context=contextPower)))
 
