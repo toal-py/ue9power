@@ -105,6 +105,10 @@ def powerOverview (request):
     
     plot = renderPlot(shortFormatDays)
 
+    #current month for title of visualization
+
+    monthList = ['dummy', 'Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember']
+
 
     contextPower={
         'day':d[0],
@@ -117,7 +121,8 @@ def powerOverview (request):
         'compLastMonthPercent':round((abs(clm) * 100), 2),
         'compLastMonth':clm,
         'plot':plot,
-        'dayOfMonth':dayOfMonth
+        'dayOfMonth':dayOfMonth,
+        'currentMonthName': monthList[date.today().month]
     }
     return (HttpResponse(render_to_string('powerOverview.html', context=contextPower)))
 

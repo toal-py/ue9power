@@ -18,5 +18,12 @@
 {% endif %}
 
 <br>
-<p><h2>Verlauf im März</h2><p><img src="data:image/png;base64,{{ plot }}"/></p></p>
+{% if dayOfMonth > 1  %}
+<p><h2>Verlauf im {{ currentMonthName }}</h2><p><img src="data:image/png;base64,{{ plot }}"/></p></p>
+
+{% else %}
+<p>Visualisierung für laufenden Monat noch nicht möglich, da noch keine Daten zur Verfügung stehen. Ab morgen werden Daten zur Verfügung stehen.</p>
+
+{% endif %}
+
 <p><a href='/'>Zurück</a></p>
