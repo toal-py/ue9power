@@ -18,8 +18,10 @@
 {% endif %}
 
 <br>
+<p><h2>Verlauf im {{ currentMonthName }}</h2></p>
+
 {% if dayOfMonth > 1  %}
-<p><h2>Verlauf im {{ currentMonthName }}</h2><p><img src="data:image/png;base64,{{ plot }}"/></p></p>
+<p><img src="data:image/png;base64,{{ plot }}"/></p>
 
 {% else %}
 <p>Visualisierung für laufenden Monat noch nicht möglich, da noch keine Daten zur Verfügung stehen. Ab morgen werden Daten zur Verfügung stehen.</p>
