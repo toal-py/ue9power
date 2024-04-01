@@ -82,6 +82,7 @@ def powerOverview (request):
     
     ep = extrapolation(cm)
 
+    # normalization of monthly power according to the number of days of both months. E.g.: February 2024 had 29 days, two less than following March. So the power consumption of February is extrapolated to 31 Days.
     def adjustMPower(mp):
         daysCurrentMonth = calendar.monthrange(date.today().year, date.today().month)[1]
         daysLastMonth = calendar.monthrange(date.today().year, ((date.today().replace(day=1))-timedelta(1)).month)[1]
