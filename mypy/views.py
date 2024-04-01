@@ -104,9 +104,12 @@ def powerOverview (request):
     dayOfMonth = date.today().day
 
     #plot
-    shortFormatDays = {elem[0][-10:-8]:elem[1] for elem in cm['result'].items()}
-    
-    plot = renderPlot(shortFormatDays)
+    if dayOfMonth != 1:
+        shortFormatDays = {elem[0][-10:-8]:elem[1] for elem in cm['result'].items()}
+        
+        plot = renderPlot(shortFormatDays)
+    else:
+        pass
 
     #current month for title of visualization
 
