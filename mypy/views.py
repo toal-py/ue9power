@@ -78,7 +78,7 @@ def powerOverview (request):
             meanValue = x['preliminary_power_consumption'] / len(x['result'])
             return round(((calendar.monthrange(date.today().year, date.today().month)[1] - len(x['result'])) * meanValue), 2) + x['preliminary_power_consumption']
         except Exception:
-            return 0
+            return 1
     
     ep = extrapolation(cm)
 
