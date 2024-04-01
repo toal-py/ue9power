@@ -14,6 +14,8 @@ def renderPlot(data):
     plotFigure.set_figwidth(10)
     plotFigure.savefig(plotFile, format='png')
     encodedFile = base64.b64encode(plotFile.getvalue())
+    plotFile.close()
     return encodedFile.decode('utf-8')
+    
 
 #td = {'22.01.2024': 6.55, '23.01.2024': 4.75, '24.01.2024': 11.92}
