@@ -126,7 +126,7 @@ def powerOverview (request):
         'extrapolationCurrentMonth':ep,
         'compLastMonthPercent':round((abs(clm) * 100), 2),
         'compLastMonth':clm,
-        'plot':plot,
+        'plot':plot if plot else None,
         'dayOfMonth':dayOfMonth,
         'currentMonthName': monthList[date.today().month]
     }
