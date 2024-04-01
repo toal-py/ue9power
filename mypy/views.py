@@ -156,6 +156,6 @@ def plotPage (request):
         plotList.append(renderPlot(shortFormatDays))
 
     context = {
-        'plots': plotList[4]
+        'plots': plotList
     }
     return (HttpResponse(render_to_string('plotPage.html', context=context)))
