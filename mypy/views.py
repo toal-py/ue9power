@@ -134,3 +134,29 @@ def powerOverview (request):
 
 def powerApiDoc (request):
     return (HttpResponse(render_to_string('powerApiDoc.html')))
+
+#cache
+def plotPage (request):
+    dotenv.read_dotenv('/var/www/python-project/ue9power/.env')
+    #different connect info in .env because of render_to_string which results in multiple quotes (""host")
+    conn = psycopg.connect(os.environ.get('POSTGRES_VIEWS'))
+    cur = conn.cursor()
+
+    cur.execute('SELECT month_year FROM monthly_power;')
+    range = cur.fetchall()
+
+    cur.close()
+    conn.close()
+
+    plotList = []
+
+    for elem in range:
+        singlePlot = json.loads(apiCall(mode = 'm', dates = elem[-6], expand = True))
+        shortFormatDays = {elem[0][-10:-8] : elem[1] for elem in singlePlot['result']['days'].items()}
+        plotList.append(renderPlot(shortFormatDays))
+
+
+    context = {
+        'plots': plotList
+    }
+    return (HttpResponse(render_to_string('plotPage.html', context=context)))
