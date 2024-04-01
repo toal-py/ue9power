@@ -155,6 +155,9 @@ def plotPage (request):
         shortFormatDays = {elem[0][-10:-8] : elem[1] for elem in singlePlot['result']['days'].items()}
         plotList.append(renderPlot(shortFormatDays))
 
+    
+    test = 
+
 
     context = {
         'plots': plotList
