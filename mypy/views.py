@@ -9,6 +9,7 @@ import calendar
 import dotenv
 import psycopg
 import os
+from io import BytesIO
 from django.views.decorators.cache import cache_page
 
 from mypy.apiInternal import apiCall
@@ -154,6 +155,8 @@ def plotPage (request):
         singlePlot = json.loads(apiCall(mode = 'm', dates = elem[0][-6], expand = True))
         shortFormatDays = {elem[0][-10:-8] : elem[1] for elem in singlePlot['result']['days'].items()}
         plotList.append(renderPlot(shortFormatDays))
+        BytesIO().close()
+        
 
     context = {
         'plots': plotList
