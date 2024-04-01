@@ -10,7 +10,7 @@ conn = psycopg.connect(os.environ.get('POSTGRES_CONNECT_DB_POWER'))
 cur = conn.cursor()
 cur.execute('SELECT * FROM daily_power;')
 allData = cur.fetchall()
-dateList = calendar.Calendar().monthdatescalendar((date.today().year),(date.today().month)) if date.today().day is not 1 else calendar.Calendar().monthdatescalendar((date.today().year),(date.today() - timedelta (1)).month)
+dateList = calendar.Calendar().monthdatescalendar((date.today().year),(date.today().month)) if date.today().day != 1 else calendar.Calendar().monthdatescalendar((date.today().year),(date.today() - timedelta (1)).month)
 #dateListLM = calendar.Calendar().monthdatescalendar(2023,12)
 dateListFormatted = [[elem.strftime('%d.%m.%Y') for elem in list] for list in dateList]
 #
