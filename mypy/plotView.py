@@ -9,12 +9,12 @@ def renderPlot(data):
     plot = sns.barplot(data=data, x = list(data.keys()), y = power, palette=colorPal, saturation=0.75, hue=list(data.keys()), legend=False)    
     for bar in plot.containers:
         plot.bar_label(bar, fontsize=8)
+    global plotFile
     plotFile = BytesIO()
     plotFigure = plot.get_figure()
     plotFigure.set_figwidth(10)
     plotFigure.savefig(plotFile, format='png')
     encodedFile = base64.b64encode(plotFile.getvalue())
-    plotFile.flush()
     return encodedFile.decode('utf-8')
     
 
