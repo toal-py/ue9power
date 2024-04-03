@@ -21,7 +21,7 @@ def plotMonthlyOverview(data):
     return encodedFile.decode('utf-8')
 
 def plotMonthlyShare(data):
-    colorPal = ['green:green', 'orange:orange', 'red:red']
+    colorPal = ['tab10:green', 'tab10:orange', 'tab10:red']
     counter = 0
     plotFigure = plt.figure()
     for bar in data.items():
