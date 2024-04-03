@@ -22,7 +22,7 @@ def plotMonthlyOverview(data):
     return encodedFile.decode('utf-8')
 
 def plotMonthlyShare(data):
-    colorPal = ['#74c69d', '#f48c06','#d00000']
+    colorPal = sns.color_palette(['#74c69d', '#f48c06','#d00000'])
     plotFigure = plt.figure()
     dframe = pd.DataFrame(data, index = [0])
     #dframe.cumsum(axis=1)
