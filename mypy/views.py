@@ -9,26 +9,10 @@ import calendar
 import dotenv
 import psycopg
 import os
-import seaborn as sns
-from io import BytesIO
-import base64
 from django.views.decorators.cache import cache_page
 
 from mypy.apiInternal import apiCall
-
-def renderPlot(data):
-    colorPal = ['red' if elem > 9.0 else 'orange' if elem >= 5.0 else 'green' for elem in data.values()]
-    power = [float(elem) for elem in data.values()]
-    plot = sns.barplot(data=data, x = list(data.keys()), y = power, palette=colorPal, saturation=0.75, hue=list(data.keys()), legend=False)    
-    for bar in plot.containers:
-        plot.bar_label(bar, fontsize=8)
-    global plotFile
-    plotFile = BytesIO()
-    plotFigure = plot.get_figure()
-    plotFigure.set_figwidth(10)
-    plotFigure.savefig(plotFile, format='png')
-    encodedFile = base64.b64encode(plotFile.getvalue())
-    return encodedFile.decode('utf-8')
+from mypy.plotView import renderPlot
 
 def homeView(request):
     htmlString = "<h1>Hello World</h1><p><a href='/power'>Hier geht es zum letzten Stromverbrauch</a></p><p><a href='/current-weather'>Hier geht es zur aktuellen Temperatur</a></p><p><a href='/preg'>Hier geht es zum Schwangerschaftsüberblick</a></p>" 
@@ -170,7 +154,6 @@ def plotPage (request):
         singlePlot = json.loads(apiCall(mode = 'm', dates = elem[0][-6], expand = True))
         shortFormatDays = {elem[0][-10:-8] : elem[1] for elem in singlePlot['result']['days'].items()}
         plotList.append(renderPlot(shortFormatDays))
-        plotFile.seek(0)
         
 
     context = {
