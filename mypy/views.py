@@ -178,7 +178,7 @@ def plotPage (request):
     
     monthlyShareValues = getShareValues(json.loads(apiCall(mode='m', dates='2', expand=True)), 2)
 
-    sharePlot = plotMonthlyShare(monthlyShareValues, x = monthlyShareValues.values())
+    sharePlot = plotMonthlyShare(monthlyShareValues)
 
     context = {
         'plots': completeList,
