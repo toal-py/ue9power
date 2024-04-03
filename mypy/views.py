@@ -168,14 +168,16 @@ def plotPage (request):
     monthNames = ['dummy', 'Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember']
     plotList = []
     monthList = []
-    averageUsage = 0.0
-    countRed = 0
-    countOrange = 0
-    countGreen = 0
+    averageUsage = []
+    countRed = []
+    countOrange = []
+    countGreen = []
     sharesList = []
 
     for elem in range:
         singlePlot = json.loads(apiCall(mode = 'm', dates = elem[0][-6], expand = True))
+
+        dom = calendar.monthrange(date.today().year, int(elem[0][-6]))[1]
 
         shareValues = getShareValues(singlePlot, month = int(elem[0][-6]))
         sharesList.append(plotMonthlyShare(shareValues))
@@ -187,22 +189,33 @@ def plotPage (request):
         monthList.append(monthNames[int(elem[0][-6])])
 
         #average usage per month
+        avg = 0.0
         for day in singlePlot['result']['days'].values():
-            averageUsage += day
+            avg += day
+        
+        avgM = avg / dom
+        
+        averageUsage.append(round(avgM,2))
 
         #number of 'colored' days
-        
-        for elem in singlePlot['result']['days'].values():
-            if elem > 9.0:
-                countRed += 1
-            elif elem < 9.0 and elem >= 5.0:
-                countOrange += 1
+        cr = 0.0
+        co = 0.0
+        cg = 0.0
+        for elm in singlePlot['result']['days'].values():
+            if elm > 9.0:
+                cr += 1
+            elif elm < 9.0 and elm >= 5.0:
+                co += 1
             else:
-                countGreen += 1
+                cg += 1
+        
+        countRed.append(cr)
+        countOrange.append(co)
+        countGreen.append(cg)
 
         
 
-    completeList = zip(plotList, monthList, list(str(round(averageUsage, 2))), list(str(countRed)), list(str(countOrange)), list(str(countGreen)), sharesList)
+    completeList = zip(plotList, monthList, averageUsage, countRed, countOrange, countGreen, sharesList)
 
     
 
