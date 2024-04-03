@@ -26,9 +26,9 @@ def plotMonthlyShare(data):
     percentageData = {'green': data['green'], 'orange': (sum(data.values()) - data['red']), 'red': sum(data.values())}
     dframe = pd.DataFrame(percentageData, index = [0])
     #dframe.cumsum(axis=1)
-    sns.barplot(data = dframe, x = 'red', y = 'orange', hue = 'orange', palette = ['tab:orange'])
-    sns.barplot(data = dframe, x = 'red', y = 'red', hue = 'red', palette = ['tab:red'])    
-    sns.barplot(data = dframe, x = 'red', y = 'green', hue = 'green', estimator = 'sum', palette = ['tab:green'])      
+    sns.barplot(data = dframe, x = 'red', y = 'red', hue = 'red', orient = 'h', palette = ['tab:red'])
+    sns.barplot(data = dframe, x = 'red', y = 'orange', hue = 'orange', orient = 'h', palette = ['tab:orange'])       
+    sns.barplot(data = dframe, x = 'red', y = 'green', hue = 'green', orient = 'h', palette = ['tab:green'])      
     plotFile = BytesIO()    
     plotFigure.savefig(plotFile, format='png')
     plotFile.seek(0)
