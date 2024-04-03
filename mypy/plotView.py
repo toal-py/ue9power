@@ -25,7 +25,7 @@ def plotMonthlyShare(data):
     plotFigure = plt.figure()
     dframe = pd.DataFrame(data, index = [0])
     dframe.cumsum(axis=1)
-    sns.barplot(data = dframe, x = 100, hue = 'red', estimator = 'sum', color = sns.color_palette("Set2", 10)[0]) 
+    sns.barplot(data = dframe, x = 'red', hue = 'red', estimator = 'sum', color = sns.color_palette("Set2", 10)[0]) 
     #sns.barplot(data = dframe, x = 100, hue = 100, estimator = 'sum', color=sns.color_palette("Set2", 10)[1])
     #sns.barplot(data = dframe, x = 100, hue = 100, estimator = 'sum', color=sns.color_palette("Set2", 10)[2])      
     plotFile = BytesIO()    
