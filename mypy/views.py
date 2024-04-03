@@ -12,7 +12,7 @@ import os
 from django.views.decorators.cache import cache_page
 
 from mypy.apiInternal import apiCall
-from mypy.plotView import plotMonthlyOverview, plotMonthlyShare
+from mypy.plotView import plotMonthlyOverview, plotMonthlyShare, getShareValues
 
 def homeView(request):
     htmlString = "<h1>Hello World</h1><p><a href='/power'>Hier geht es zum letzten Stromverbrauch</a></p><p><a href='/current-weather'>Hier geht es zur aktuellen Temperatur</a></p><p><a href='/preg'>Hier geht es zum Schwangerschaftsüberblick</a></p>" 
@@ -147,24 +147,6 @@ def plotPage (request):
     cur.close()
     conn.close()
 
-    def getShareValues(data, month, year = date.today().year):
-        #data = json.loads(apiCall(mode='m', dates='2', expand=True))
-        countRed = []
-        countOrange = []
-        countGreen = []
-        for elem in data['result']['days'].values():
-            if elem > 9.0:
-                countRed.append(elem)
-            elif elem < 9.0 and elem >= 5.0:
-                countOrange.append(elem)
-            else:
-                countGreen.append(elem)
-        daysOfMonth = calendar.monthrange(date.today().year, month)[1]
-        shares = {'green': round(((len(countGreen) / daysOfMonth) * 100), 2), 'orange': round(((len(countOrange) / daysOfMonth) * 100), 2), 'red': round(((len(countRed) / daysOfMonth) * 100), 2)}
-        return shares
-    
-    #monthlyShareValues = getShareValues(json.loads(apiCall(mode='m', dates='2', expand=True)), 2)
-
     monthNames = ['dummy', 'Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember']
     plotList = []
     monthList = []
@@ -212,12 +194,9 @@ def plotPage (request):
         countRed.append(cr)
         countOrange.append(co)
         countGreen.append(cg)
-
         
-
+    #one list for all variables of the template
     completeList = zip(plotList, monthList, averageUsage, countRed, countOrange, countGreen, sharesList)
-
-    
 
     context = {
         'plots': completeList
