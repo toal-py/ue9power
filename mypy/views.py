@@ -176,7 +176,8 @@ def plotPage (request):
 
     for elem in range:
         singlePlot = json.loads(apiCall(mode = 'm', dates = elem[0][-6], expand = True))
-
+        
+        sharesList.append(getShareValues(singlePlot, month = elem[0][-6]))
         #plot monthly overview
         shortFormatDays = {elem[0][-10:-8] : elem[1] for elem in singlePlot['result']['days'].items()}
         plotList.append(plotMonthlyOverview(shortFormatDays))
@@ -197,12 +198,10 @@ def plotPage (request):
                 countOrange += 1
             else:
                 countGreen += 1
-        
-        sharesList.append(getShareValues(singlePlot, month = elem[0][-6]))
 
         
 
-    completeList = zip(plotList, monthList, list(averageUsage), list(countRed), list(countOrange), list(countGreen), sharesList)
+    completeList = zip(plotList, monthList, list(round(averageUsage, 2)), list(countRed), list(countOrange), list(countGreen), sharesList)
 
     
 
