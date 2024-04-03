@@ -23,7 +23,7 @@ def plotMonthlyOverview(data):
 def plotMonthlyShare(data):
     colorPal = {'green': '#74c69d','yellow': '#f48c06','red': '#d00000'}
     #plotFigure = plt.figure()
-    plot = sns.barplot(data = pd.DataFrame({'red': [sum(data.values())]}), x = 100, hue = 'red', palette = 'bright:red')
+    plot = sns.barplot(data = pd.DataFrame({'red': [sum(data.values())]}), x = 100, hue = 'red', palette = 'dark:red')
     #sns.barplot(data = pd.DataFrame({'yellow': [sum(data.values()) - data['red']]}), x = 100, hue = 'yellow', palette = colorPal)
     #sns.barplot(data = pd.DataFrame({'green': [data['green']]}), x = 100, hue = 'green', palette = colorPal)
     plotFile = BytesIO()
