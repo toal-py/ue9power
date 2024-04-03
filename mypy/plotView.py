@@ -25,24 +25,28 @@ def plotMonthlyShare(data):
     plotFigure = plt.figure()
     percentageData = {'green': data['green'], 'orange': (sum(data.values()) - data['red']), 'red': sum(data.values())}
     dframe = pd.DataFrame(percentageData, index = [0])
-    #dframe.cumsum(axis=1)
-    bar1 = sns.barplot(data = dframe, x = 'red', y = 'red', hue = 'red', orient = 'h', palette = ['tab:red'], legend = False)
+
+    bar1 = sns.barplot(data = dframe, x = 'red', y = 'red', hue = 'red', orient = 'h', width = 0.4, palette = ['tab:red'], legend = False)
     bar1.set(yticklabels=[])
     bar1.set(ylabel=None)
     bar1.tick_params(left=False)
     bar1.set(xlabel=None)
-    bar2 = sns.barplot(data = dframe, x = 'orange', y = 'red', hue = 'orange', orient = 'h', palette = ['tab:orange'], legend = False)
+    bar1.bar_label(bar1, fmt = f'{data['red']}')
+    
+    bar2 = sns.barplot(data = dframe, x = 'orange', y = 'red', hue = 'orange', orient = 'h', width = 0.4, palette = ['tab:orange'], legend = False)
     bar2.set(yticklabels=[])
     bar2.set(ylabel=None)
     bar2.tick_params(left=False)
     bar2.set(xlabel=None)       
-    bar3 = sns.barplot(data = dframe, x = 'green', y = 'red', hue = 'green', orient = 'h', palette = ['tab:green'], legend = False)
+    
+    bar3 = sns.barplot(data = dframe, x = 'green', y = 'red', hue = 'green', orient = 'h', width = 0.4, palette = ['tab:green'], legend = False)
     bar3.set(yticklabels=[])
     bar3.set(ylabel=None)
     bar3.tick_params(left=False)
     bar3.set(xlabel=None)     
+    
     plotFile = BytesIO()
-    plotFigure.set_figheight(1.5)
+    plotFigure.set_figheight(2.0)
     plotFigure.set_figwidth(10)    
     plotFigure.savefig(plotFile, format='png')
     plotFile.seek(0)
