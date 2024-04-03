@@ -22,13 +22,11 @@ def plotMonthlyOverview(data):
 
 def plotMonthlyShare(data):
     colorPal = {'green': '#74c69d','yellow': '#f48c06','red': '#d00000'}
-    fig, ax = plt.subplots()
     sns.barplot(data = pd.DataFrame({'red': [sum(data.values())]}, index = [0]), hue = 'red', x = 100, color = sns.color_palette("Set2", 10)[0]) 
     sns.barplot(data = pd.DataFrame({'yellow': [sum(data.values()) - data['red']]}, index = [0]), hue = 'yellow', x = 100, color=sns.color_palette("Set2", 10)[1])
-    sns.barplot(data = pd.DataFrame({'green': [data['green']]}, index = [0]), hue = 'green', x = 100, color=sns.color_palette("Set2", 10)[2])
-    
-       
+    plot = sns.barplot(data = pd.DataFrame({'green': [data['green']]}, index = [0]), hue = 'green', x = 100, color=sns.color_palette("Set2", 10)[2])      
     plotFile = BytesIO()
+    fig = plot.get_figure()
     fig.savefig(plotFile, format='png')
     plotFile.seek(0)
     encodedFile = base64.b64encode(plotFile.getbuffer())
