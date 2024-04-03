@@ -21,7 +21,7 @@ def plotMonthlyOverview(data):
 
 def plotMonthlyShare(data):
     plotFigure = plt.figure()
-    for bar in data.items():
+    for bar in data:
         sns.barplot(data = bar, x = bar[1], hue = bar[1])
     plotFile = BytesIO()    
     plotFigure.savefig(plotFile, format='png')
