@@ -201,7 +201,7 @@ def plotPage (request):
 
         
 
-    completeList = zip(plotList, monthList, list(str(round(averageUsage, 2))), list(countRed), list(countOrange), list(countGreen), sharesList)
+    completeList = zip(plotList, monthList, list(str(round(averageUsage, 2))), list(str(countRed)), list(str(countOrange)), list(str(countGreen)), sharesList)
 
     
 
