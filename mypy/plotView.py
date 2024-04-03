@@ -2,6 +2,7 @@ import seaborn as sns
 from io import BytesIO
 import base64
 import matplotlib.pyplot as plt
+#import matplotlib.colors
 import pandas as pd
 
 
@@ -25,8 +26,8 @@ def plotMonthlyShare(data):
     plotFigure = plt.figure()
     dframe = pd.DataFrame(data, index = [0])
     dframe.cumsum(axis=1)
-    sns.barplot(data = dframe, x = 'red', y = 'yellow', hue = 'yellow', estimator = 'sum', palette = colorPal)
-    sns.barplot(data = dframe, x = 'red', y = 'red', hue = 'red', estimator = 'sum', palette = colorPal) 
+    sns.barplot(data = dframe, x = 'red', y = 'yellow', hue = 'yellow', estimator = 'sum', color = 'tab:orange')
+    sns.barplot(data = dframe, x = 'red', y = 'red', hue = 'red', estimator = 'sum', color = 'tab:red') 
     
     #sns.barplot(data = dframe, x = 100, hue = 100, estimator = 'sum', color=sns.color_palette("Set2", 10)[2])      
     plotFile = BytesIO()    
