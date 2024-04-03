@@ -1,12 +1,13 @@
 import seaborn as sns
 from io import BytesIO
 import base64
+import matplotlib.pyplot as plt
 
 
 def renderPlot(data):
     colorPal = ['red' if elem > 9.0 else 'orange' if elem >= 5.0 else 'green' for elem in data.values()]
     power = [float(elem) for elem in data.values()]
-    plotFigure = sns.figure()
+    plotFigure = plt.figure()
     plot = sns.barplot(data=data, x = list(data.keys()), y = power, palette=colorPal, saturation=0.75, hue=list(data.keys()), legend=False)    
     for bar in plot.containers:
         plot.bar_label(bar, fontsize=8)
