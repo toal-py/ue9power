@@ -22,14 +22,13 @@ def plotMonthlyOverview(data):
     return encodedFile.decode('utf-8')
 
 def plotMonthlyShare(data):
-    colorPal = sns.color_palette(['#74c69d', '#f48c06','#d00000'])
     plotFigure = plt.figure()
-    dframe = pd.DataFrame(data, index = [0])
+    percentageData = {'green': data['green'], 'orange': (sum(data.values()) - data['red']), 'red': sum(data.values())}
+    dframe = pd.DataFrame(percentageData, index = [0])
     #dframe.cumsum(axis=1)
     sns.barplot(data = dframe, x = 'red', y = 'yellow', hue = 'yellow', palette = ['tab:orange'])
-    sns.barplot(data = dframe, x = 'red', y = 'red', hue = 'red', palette = ['tab:red']) 
-    
-    #sns.barplot(data = dframe, x = 100, hue = 100, estimator = 'sum', color=sns.color_palette("Set2", 10)[2])      
+    sns.barplot(data = dframe, x = 'red', y = 'red', hue = 'red', palette = ['tab:red'])    
+    sns.barplot(data = dframe, x = 'red', y = 'green', hue = 'green', estimator = 'sum', palette = ['tab:green'])      
     plotFile = BytesIO()    
     plotFigure.savefig(plotFile, format='png')
     plotFile.seek(0)

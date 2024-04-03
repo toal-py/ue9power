@@ -173,7 +173,7 @@ def plotPage (request):
                 countGreen.append(elem)
 
         daysOfMonth = calendar.monthrange(date.today().year, month)[1]
-        shares = {'green': round(((len(countGreen) / daysOfMonth) * 100), 2), 'yellow': round(((len(countYellow) / daysOfMonth) * 100), 2), 'red': round(((len(countRed) / daysOfMonth) * 100), 2)}
+        shares = {'green': round(((len(countGreen) / daysOfMonth) * 100), 2), 'orange': round(((len(countYellow) / daysOfMonth) * 100), 2), 'red': round(((len(countRed) / daysOfMonth) * 100), 2)}
         return shares
     
     monthlyShareValues = getShareValues(json.loads(apiCall(mode='m', dates='2', expand=True)), 2)
