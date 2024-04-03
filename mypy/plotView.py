@@ -22,12 +22,10 @@ def plotMonthlyOverview(data):
 
 def plotMonthlyShare(data):
     colorPal = ['green', 'orange', 'red']
-    counter = 0
     plotFigure = plt.figure()
     for bar in data.items():
         dframe = pd.DataFrame({bar[0]: bar[1]}, index=[0])
-        sns.barplot(data = dframe, x = bar[1], hue = bar[0], palette = colorPal[counter])
-        counter += 1
+        sns.barplot(data = dframe, x = bar[1], hue = bar[0], palette = colorPal)
     plotFile = BytesIO()    
     plotFigure.savefig(plotFile, format='png')
     plotFile.seek(0)
