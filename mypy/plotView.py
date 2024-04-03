@@ -13,10 +13,10 @@ def renderPlot(data):
     plotFile = BytesIO()
     plotFigure = plot.get_figure()
     plotFigure.set_figwidth(10)    
-    #plotFigure.savefig(plotFile, format='png')
+    plotFigure.savefig(plotFile, format='png')
     plotFile.seek(0)
-    with open(plotFigure, 'rb') as f:
-        encodedFile = base64.b64encode(f.read())
+    img = Image.open(plotFile)
+    encodedFile = base64.b64encode(img.show())
     plotFile.close()
     return encodedFile.decode('utf-8')
     
