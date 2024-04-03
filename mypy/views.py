@@ -156,7 +156,7 @@ def plotPage (request):
         singlePlot = json.loads(apiCall(mode = 'm', dates = elem[0][-6], expand = True))
         shortFormatDays = {elem[0][-10:-8] : elem[1] for elem in singlePlot['result']['days'].items()}
         plotList.append(renderPlot(shortFormatDays))
-        monthList.append(monthNames[elem[0][-6]])
+        monthList.append(monthNames[int(elem[0][-6])])
 
     context = {
         'plots': plotList,
