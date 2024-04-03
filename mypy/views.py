@@ -158,8 +158,9 @@ def plotPage (request):
         plotList.append(renderPlot(shortFormatDays))
         monthList.append(monthNames[int(elem[0][-6])])
 
+    completeList = zip(plotList, monthList)
+
     context = {
-        'plots': plotList,
-        'months': monthList
+        'plots': completeList
     }
     return (HttpResponse(render_to_string('plotPage.html', context=context)))
