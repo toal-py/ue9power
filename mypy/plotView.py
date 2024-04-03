@@ -2,6 +2,7 @@ import seaborn as sns
 from io import BytesIO
 import base64
 import matplotlib.pyplot as plt
+import pandas as pd
 
 
 def plotMonthlyOverview(data):
@@ -22,7 +23,8 @@ def plotMonthlyOverview(data):
 def plotMonthlyShare(data):
     plotFigure = plt.figure()
     for bar in data.items():
-        sns.barplot(data = [{bar[0]: bar[1]}], x = bar[1], hue = bar[0])
+        dframe = pd.DataFrame({bar[0]: bar[1]}, index=[0])
+        sns.barplot(data = dframe, x = bar[1], hue = bar[0])
     plotFile = BytesIO()    
     plotFigure.savefig(plotFile, format='png')
     plotFile.seek(0)
