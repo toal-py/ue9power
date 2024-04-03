@@ -21,7 +21,7 @@ def plotMonthlyOverview(data):
     return encodedFile.decode('utf-8')
 
 def plotMonthlyShare(data):
-    colorPal = {'#74c69d' if elem == 'green' else '#f48c06' if elem == 'yellow' else '#d00000' for elem in data.keys()}
+    colorPal = ['#74c69d' if elem == 'green' else '#f48c06' if elem == 'yellow' else '#d00000' for elem in data.keys()]
     plotFigure = plt.figure()
     dframe = pd.DataFrame(data, index = [0])
     dframe.cumsum(axis=1)
