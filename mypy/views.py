@@ -12,7 +12,7 @@ import os
 from django.views.decorators.cache import cache_page
 
 from mypy.apiInternal import apiCall
-from mypy.plotView import renderPlot
+from mypy.plotView import plotMonthlyOverview
 
 def homeView(request):
     htmlString = "<h1>Hello World</h1><p><a href='/power'>Hier geht es zum letzten Stromverbrauch</a></p><p><a href='/current-weather'>Hier geht es zur aktuellen Temperatur</a></p><p><a href='/preg'>Hier geht es zum Schwangerschaftsüberblick</a></p>" 
@@ -53,7 +53,7 @@ def site_pregOverview(request):
     pregOverview = render_to_string('preg_overview.html', context=context_preg)
     return HttpResponse(pregOverview)
 
-@cache_page(21600)
+#@cache_page(21600)
 def powerOverview (request):
     dotenv.read_dotenv('/var/www/python-project/ue9power/.env')
     #different connect info in .env because of render_to_string which results in multiple quotes (""host")
@@ -107,7 +107,7 @@ def powerOverview (request):
     if dayOfMonth != 1:
         shortFormatDays = {elem[0][-10:-8]:elem[1] for elem in cm['result'].items()}
         
-        plot = renderPlot(shortFormatDays)
+        plot = plotMonthlyOverview(shortFormatDays)
     else:
         pass
 
@@ -115,6 +115,24 @@ def powerOverview (request):
 
     monthList = ['dummy', 'Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember']
 
+    #test Boxplot
+
+    def getShareValues(data, month, year = date.today().year):
+        #data = json.loads(apiCall(mode='m', dates='2', expand=True))
+        countRed = []
+        countYellow = []
+        countGreen = []
+        for elem in data['result']['days'].values():
+            if elem > 9.0:
+                countRed.append(elem)
+            elif elem < 9.0 and elem >= 5.0:
+                countYellow.append(elem)
+            else:
+                countGreen.append(elem)
+
+        daysOfMonth = calendar.monthrange(date.today().year, month)[1]
+        shares = {'green': round(((len(countGreen) / daysOfMonth) * 100), 2), 'yellow': round(((len(countYellow) / daysOfMonth) * 100), 2), 'red': round(((len(countRed) / daysOfMonth) * 100), 2)}
+        return shares
 
     contextPower={
         'day':d[0],
@@ -128,7 +146,8 @@ def powerOverview (request):
         'compLastMonth':clm,
         'plot':plot if dayOfMonth != 1 else None,
         'dayOfMonth':dayOfMonth,
-        'currentMonthName': monthList[date.today().month]
+        'currentMonthName': monthList[date.today().month],
+        'shareTest': getShareValues(json.loads(apiCall(mode='m', dates='2', expand=True)), 2)
     }
     return (HttpResponse(render_to_string('powerOverview.html', context=contextPower)))
 
@@ -155,7 +174,7 @@ def plotPage (request):
     for elem in range:
         singlePlot = json.loads(apiCall(mode = 'm', dates = elem[0][-6], expand = True))
         shortFormatDays = {elem[0][-10:-8] : elem[1] for elem in singlePlot['result']['days'].items()}
-        plotList.append(renderPlot(shortFormatDays))
+        plotList.append(plotMonthlyOverview(shortFormatDays))
         monthList.append(monthNames[int(elem[0][-6])])
 
     completeList = zip(plotList, monthList)

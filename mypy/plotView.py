@@ -4,7 +4,7 @@ import base64
 import matplotlib.pyplot as plt
 
 
-def renderPlot(data):
+def plotMonthlyOverview(data):
     colorPal = ['red' if elem > 9.0 else 'orange' if elem >= 5.0 else 'green' for elem in data.values()]
     power = [float(elem) for elem in data.values()]
     plotFigure = plt.figure()
@@ -13,6 +13,16 @@ def renderPlot(data):
         plot.bar_label(bar, fontsize=8)
     plotFile = BytesIO()
     plotFigure.set_figwidth(10)    
+    plotFigure.savefig(plotFile, format='png')
+    plotFile.seek(0)
+    encodedFile = base64.b64encode(plotFile.getbuffer())
+    plotFile.close()
+    return encodedFile.decode('utf-8')
+
+def plotMonthlyShare(data):
+    plotFigure = plt.figure()
+    plot = sns.boxplot(data = data, x = 100)
+    plotFile = BytesIO()    
     plotFigure.savefig(plotFile, format='png')
     plotFile.seek(0)
     encodedFile = base64.b64encode(plotFile.getbuffer())
