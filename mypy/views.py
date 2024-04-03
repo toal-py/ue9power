@@ -198,9 +198,9 @@ def plotPage (request):
         averageUsage.append(round(avgM,2))
 
         #number of 'colored' days
-        cr = 0.0
-        co = 0.0
-        cg = 0.0
+        cr = 0
+        co = 0
+        cg = 0
         for elm in singlePlot['result']['days'].values():
             if elm > 9.0:
                 cr += 1
