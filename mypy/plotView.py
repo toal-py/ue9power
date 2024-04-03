@@ -31,7 +31,8 @@ def plotMonthlyShare(data):
     bar1.set(ylabel=None)
     bar1.tick_params(left=False)
     bar1.set(xlabel=None)
-    bar1.bar_label(bar1, fmt = f'{data['red']}')
+    for bar in bar1.containers:
+        bar1.bar_label(bar, fmt = f'{data['red']}')
     
     bar2 = sns.barplot(data = dframe, x = 'orange', y = 'red', hue = 'orange', orient = 'h', width = 0.4, palette = ['tab:orange'], legend = False)
     bar2.set(yticklabels=[])
