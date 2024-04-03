@@ -147,41 +147,66 @@ def plotPage (request):
     cur.close()
     conn.close()
 
-    monthNames = ['dummy', 'Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember']
-    plotList = []
-    monthList = []
-
-    for elem in range:
-        singlePlot = json.loads(apiCall(mode = 'm', dates = elem[0][-6], expand = True))
-        shortFormatDays = {elem[0][-10:-8] : elem[1] for elem in singlePlot['result']['days'].items()}
-        plotList.append(plotMonthlyOverview(shortFormatDays))
-        monthList.append(monthNames[int(elem[0][-6])])
-
-    completeList = zip(plotList, monthList)
-
     def getShareValues(data, month, year = date.today().year):
         #data = json.loads(apiCall(mode='m', dates='2', expand=True))
         countRed = []
-        countYellow = []
+        countOrange = []
         countGreen = []
         for elem in data['result']['days'].values():
             if elem > 9.0:
                 countRed.append(elem)
             elif elem < 9.0 and elem >= 5.0:
-                countYellow.append(elem)
+                countOrange.append(elem)
             else:
                 countGreen.append(elem)
-
         daysOfMonth = calendar.monthrange(date.today().year, month)[1]
-        shares = {'green': round(((len(countGreen) / daysOfMonth) * 100), 2), 'orange': round(((len(countYellow) / daysOfMonth) * 100), 2), 'red': round(((len(countRed) / daysOfMonth) * 100), 2)}
+        shares = {'green': round(((len(countGreen) / daysOfMonth) * 100), 2), 'orange': round(((len(countOrange) / daysOfMonth) * 100), 2), 'red': round(((len(countRed) / daysOfMonth) * 100), 2)}
         return shares
     
-    monthlyShareValues = getShareValues(json.loads(apiCall(mode='m', dates='2', expand=True)), 2)
+    #monthlyShareValues = getShareValues(json.loads(apiCall(mode='m', dates='2', expand=True)), 2)
 
-    sharePlot = plotMonthlyShare(monthlyShareValues)
+    monthNames = ['dummy', 'Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember']
+    plotList = []
+    monthList = []
+    averageUsage = 0.0
+    countRed = 0
+    countOrange = 0
+    countGreen = 0
+    sharesList = []
+
+    for elem in range:
+        singlePlot = json.loads(apiCall(mode = 'm', dates = elem[0][-6], expand = True))
+
+        #plot monthly overview
+        shortFormatDays = {elem[0][-10:-8] : elem[1] for elem in singlePlot['result']['days'].items()}
+        plotList.append(plotMonthlyOverview(shortFormatDays))
+
+        #titles for individual month
+        monthList.append(monthNames[int(elem[0][-6])])
+
+        #average usage per month
+        for day in singlePlot['result']['days'].values():
+            averageUsage += day
+
+        #number of 'colored' days
+        
+        for elem in singlePlot['result']['days'].values():
+            if elem > 9.0:
+                countRed += 1
+            elif elem < 9.0 and elem >= 5.0:
+                countOrange += 1
+            else:
+                countGreen += 1
+        
+        sharesList.append(getShareValues(singlePlot, month = elem[0][-6]))
+
+        
+
+    completeList = zip(plotList, monthList, list(averageUsage), list(countRed), list(countOrange), list(countGreen), sharesList)
+
+    
 
     context = {
-        'plots': completeList,
-        'sharePlot': sharePlot
+        'plots': completeList
     }
     return (HttpResponse(render_to_string('plotPage.html', context=context)))

@@ -1,15 +1,13 @@
 <h2>Übersicht vergangener Monate</h2>
 
-<p><img src="data:image/png;base64,{{ sharePlot }}"/></p>
-
-{% for plot, month in plots %}
+{% for plot, month, average, red, orange, green, sharePlot in plots %}
 <h3>{{ month }}</h3>
 <p><b>Verlauf:</b></p>
 <p><img src="data:image/png;base64,{{ plot }}"/></p>
-<p>Durchschnittlicher Verbrauch: {{ g }}<br>
-Anzahl Tage über 9 kWh: {{ f }}<br>
-Anzahl Tage zwischen 5 und 9 kWh: {{ v }}<br>
-Anzahl Tage unter 5 kWh: {{ c }}</p>
+<p>Durchschnittlicher Verbrauch: {{ average }}<br>
+Anzahl Tage über 9 kWh: {{ red }}<br>
+Anzahl Tage zwischen 5 und 9 kWh: {{ orange }}<br>
+Anzahl Tage unter 5 kWh: {{ green }}</p>
 <p>Prozentuale Verteilung:</p>
-<p><img src="data:image/png;base64,{{ plot }}"/></p>
+<p><img src="data:image/png;base64,{{ sharePlot }}"/></p>
 {% endfor %}
