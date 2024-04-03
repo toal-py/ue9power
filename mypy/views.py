@@ -148,15 +148,18 @@ def plotPage (request):
     cur.close()
     conn.close()
 
+    monthNames = ['dummy', 'Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember']
     plotList = []
+    monthList = []
 
     for elem in range:
         singlePlot = json.loads(apiCall(mode = 'm', dates = elem[0][-6], expand = True))
         shortFormatDays = {elem[0][-10:-8] : elem[1] for elem in singlePlot['result']['days'].items()}
         plotList.append(renderPlot(shortFormatDays))
-        
+        monthList.append(monthNames[elem[0][-6]])
 
     context = {
-        'plots': plotList
+        'plots': plotList,
+        'months': monthList
     }
     return (HttpResponse(render_to_string('plotPage.html', context=context)))
