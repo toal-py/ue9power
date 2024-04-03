@@ -24,7 +24,6 @@ def plotMonthlyShare(data):
     colorPal = {'green': '#74c69d','yellow': '#f48c06','red': '#d00000'}
     plotFigure = plt.figure()
     dframe = pd.DataFrame(data, index = [0])
-    dframe.set_index([0])
     dframe.cumsum()
     sns.barplot(x = dframe.index, color = sns.color_palette("Set2", 10)[0]) 
     sns.barplot(x = dframe.index, color=sns.color_palette("Set2", 10)[1])
