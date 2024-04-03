@@ -1,6 +1,6 @@
 <h2>Übersicht vergangener Monate</h2>
 
-{% for plot,month in plots,months %}
+{% for plot,month in plots %}
 <h3>{{ month }}</h3>
 <p><img src="data:image/png;base64,{{ plot }}"/></p>
 {% endfor %}
