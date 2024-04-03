@@ -19,9 +19,9 @@ def plotMonthlyOverview(data):
     plotFile.close()
     return encodedFile.decode('utf-8')
 
-def plotMonthlyShare(data):
+def plotMonthlyShare(data, x):
     plotFigure = plt.figure()
-    plot = sns.boxplot(data = data, x = 100)
+    plot = sns.boxplot(data = data, x = x)
     plotFile = BytesIO()    
     plotFigure.savefig(plotFile, format='png')
     plotFile.seek(0)
