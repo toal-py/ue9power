@@ -16,7 +16,7 @@ def renderPlot(data):
     plotFigure.savefig(plotFile, format='png')
     plotFile.seek(0)
     img = Image.open(plotFile)
-    encodedFile = base64.b64encode(img.show())
+    encodedFile = base64.b64encode(img.tobytes())
     plotFile.close()
     return encodedFile.decode('utf-8')
     
