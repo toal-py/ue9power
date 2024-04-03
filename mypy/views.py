@@ -12,7 +12,7 @@ import os
 from django.views.decorators.cache import cache_page
 
 from mypy.apiInternal import apiCall
-from mypy.plotView import plotMonthlyOverview
+from mypy.plotView import plotMonthlyOverview, plotMonthlyShare
 
 def homeView(request):
     htmlString = "<h1>Hello World</h1><p><a href='/power'>Hier geht es zum letzten Stromverbrauch</a></p><p><a href='/current-weather'>Hier geht es zur aktuellen Temperatur</a></p><p><a href='/preg'>Hier geht es zum Schwangerschaftsüberblick</a></p>" 
@@ -115,25 +115,6 @@ def powerOverview (request):
 
     monthList = ['dummy', 'Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember']
 
-    #test Boxplot
-
-    def getShareValues(data, month, year = date.today().year):
-        #data = json.loads(apiCall(mode='m', dates='2', expand=True))
-        countRed = []
-        countYellow = []
-        countGreen = []
-        for elem in data['result']['days'].values():
-            if elem > 9.0:
-                countRed.append(elem)
-            elif elem < 9.0 and elem >= 5.0:
-                countYellow.append(elem)
-            else:
-                countGreen.append(elem)
-
-        daysOfMonth = calendar.monthrange(date.today().year, month)[1]
-        shares = {'green': round(((len(countGreen) / daysOfMonth) * 100), 2), 'yellow': round(((len(countYellow) / daysOfMonth) * 100), 2), 'red': round(((len(countRed) / daysOfMonth) * 100), 2)}
-        return shares
-
     contextPower={
         'day':d[0],
         'dPower':d[1],
@@ -146,8 +127,7 @@ def powerOverview (request):
         'compLastMonth':clm,
         'plot':plot if dayOfMonth != 1 else None,
         'dayOfMonth':dayOfMonth,
-        'currentMonthName': monthList[date.today().month],
-        'shareTest': getShareValues(json.loads(apiCall(mode='m', dates='2', expand=True)), 2)
+        'currentMonthName': monthList[date.today().month]
     }
     return (HttpResponse(render_to_string('powerOverview.html', context=contextPower)))
 
@@ -179,7 +159,29 @@ def plotPage (request):
 
     completeList = zip(plotList, monthList)
 
+    def getShareValues(data, month, year = date.today().year):
+        #data = json.loads(apiCall(mode='m', dates='2', expand=True))
+        countRed = []
+        countYellow = []
+        countGreen = []
+        for elem in data['result']['days'].values():
+            if elem > 9.0:
+                countRed.append(elem)
+            elif elem < 9.0 and elem >= 5.0:
+                countYellow.append(elem)
+            else:
+                countGreen.append(elem)
+
+        daysOfMonth = calendar.monthrange(date.today().year, month)[1]
+        shares = {'green': round(((len(countGreen) / daysOfMonth) * 100), 2), 'yellow': round(((len(countYellow) / daysOfMonth) * 100), 2), 'red': round(((len(countRed) / daysOfMonth) * 100), 2)}
+        return shares
+    
+    monthlyShareValues = getShareValues(json.loads(apiCall(mode='m', dates='2', expand=True)), 2)
+
+    sharePlot = plotMonthlyShare(monthlyShareValues.values())
+
     context = {
-        'plots': completeList
+        'plots': completeList,
+        'sharePlot': sharePlot
     }
     return (HttpResponse(render_to_string('plotPage.html', context=context)))
