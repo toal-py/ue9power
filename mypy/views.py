@@ -176,8 +176,8 @@ def plotPage (request):
 
     for elem in range:
         singlePlot = json.loads(apiCall(mode = 'm', dates = elem[0][-6], expand = True))
-        
-        sharesList.append(getShareValues(singlePlot, month = elem[0][-6]))
+
+        sharesList.append(getShareValues(singlePlot, month = int(elem[0][-6])))
         #plot monthly overview
         shortFormatDays = {elem[0][-10:-8] : elem[1] for elem in singlePlot['result']['days'].items()}
         plotList.append(plotMonthlyOverview(shortFormatDays))
