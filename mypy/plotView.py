@@ -8,7 +8,7 @@ from datetime import date
 
 
 def plotMonthlyOverview(data):
-    colorPal = ['tab:red' if elem > 9.0 else 'tab:orange' if elem >= 7.0 else '#FFFF14' if elem >= 5.0 else 'tab:green' if elem >= 3.0 else 'light:green' for elem in data.values()]
+    colorPal = ['tab:red' if elem >= 9.0 else 'tab:orange' if elem >= 7.0 else 'yellow' if elem >= 5.0 else 'tab:green' if elem >= 3.0 else 'light:green' for elem in data.values()]
     power = [float(elem) for elem in data.values()]
     plotFigure = plt.figure()
     plot = sns.barplot(data=data, x = list(data.keys()), y = power, palette=colorPal, saturation=0.75, hue=list(data.keys()), legend=False)    
@@ -24,7 +24,7 @@ def plotMonthlyOverview(data):
 
 def plotMonthlyShare(data):
     plotFigure = plt.figure()
-    percentageData = {'green': data['green'], 'orange': (sum(data.values()) - data['red']), 'red': sum(data.values())}
+    percentageData = {'lightGreen': data['lightGreen'], 'green': data['green'] + data['lightGreen'], 'yellow': (sum(data.values()) - data['red'] - data['orange']), 'orange': (sum(data.values()) - data['red']), 'red': sum(data.values())}
     dframe = pd.DataFrame(percentageData, index = [0])
 
     bar1 = sns.barplot(data = dframe, x = 'red', y = 'red', hue = 'red', orient = 'h', width = 0.4, palette = ['tab:red'], legend = False)
@@ -38,12 +38,24 @@ def plotMonthlyShare(data):
     bar2.set(ylabel=None)
     bar2.tick_params(left=False)
     bar2.set(xlabel=None)
-    
-    bar3 = sns.barplot(data = dframe, x = 'green', y = 'red', hue = 'green', orient = 'h', width = 0.4, palette = ['tab:green'], legend = False)
+
+    bar3 = sns.barplot(data = dframe, x = 'yellow', y = 'red', hue = 'yellow', orient = 'h', width = 0.4, palette = ['yellow'], legend = False)
     bar3.set(yticklabels=[])
     bar3.set(ylabel=None)
     bar3.tick_params(left=False)
-    bar3.set(xlabel=None)     
+    bar3.set(xlabel=None)
+
+    bar4 = sns.barplot(data = dframe, x = 'green', y = 'red', hue = 'green', orient = 'h', width = 0.4, palette = ['tab:green'], legend = False)
+    bar4.set(yticklabels=[])
+    bar4.set(ylabel=None)
+    bar4.tick_params(left=False)
+    bar4.set(xlabel=None)
+    
+    bar5 = sns.barplot(data = dframe, x = 'lightGreen', y = 'red', hue = 'lightGreen', orient = 'h', width = 0.4, palette = ['light:green'], legend = False)
+    bar5.set(yticklabels=[])
+    bar5.set(ylabel=None)
+    bar5.tick_params(left=False)
+    bar5.set(xlabel=None)     
     
     plotFile = BytesIO()
     plotFigure.set_figheight(2.0)
@@ -58,16 +70,22 @@ def plotMonthlyShare(data):
 def getShareValues(data, month, year = date.today().year):
     countRed = []
     countOrange = []
+    countYellow = []
     countGreen = []
+    countLightGreen = []
     for elem in data['result']['days'].values():
-        if elem > 9.0:
+        if elem >= 9.0:
             countRed.append(elem)
-        elif elem < 9.0 and elem >= 5.0:
+        elif elem < 9.0 and elem >= 7.0:
             countOrange.append(elem)
-        else:
+        elif elem < 7.0 and elem >= 5.0:
+            countYellow.append(elem)
+        elif elem < 5.0 and elem >= 3.0:
             countGreen.append(elem)
+        else:
+            countLightGreen.append(elem)
     daysOfMonth = calendar.monthrange(date.today().year, month)[1]
-    shares = {'green': round(((len(countGreen) / daysOfMonth) * 100), 2), 'orange': round(((len(countOrange) / daysOfMonth) * 100), 2), 'red': round(((len(countRed) / daysOfMonth) * 100), 2)}
+    shares = {'lightGreen': round(((len(countLightGreen) / daysOfMonth) * 100), 2), 'green': round(((len(countGreen) / daysOfMonth) * 100), 2), 'yellow': round(((len(countYellow) / daysOfMonth) * 100), 2), 'orange': round(((len(countOrange) / daysOfMonth) * 100), 2), 'red': round(((len(countRed) / daysOfMonth) * 100), 2)}
     return shares
     
 

@@ -153,7 +153,9 @@ def plotPage (request):
     averageUsage = []
     countRed = []
     countOrange = []
+    countYellow = []
     countGreen = []
+    countLightGreen = []
     sharesList = []
 
     for elem in range:
@@ -182,21 +184,29 @@ def plotPage (request):
         #number of 'colored' days
         cr = 0
         co = 0
+        cy = 0
         cg = 0
+        clg = 0
         for elm in singlePlot['result']['days'].values():
-            if elm > 9.0:
+            if elm >= 9.0:
                 cr += 1
-            elif elm < 9.0 and elm >= 5.0:
+            elif elm < 9.0 and elm >= 7.0:
                 co += 1
-            else:
+            elif elm < 7.0 and elm >= 5.0:
+                cy += 1
+            elif elm < 5.0 and elm >= 3.0:
                 cg += 1
+            else:
+                clg += 1
         
         countRed.append(cr)
         countOrange.append(co)
+        countYellow.append(cy)
         countGreen.append(cg)
+        countLightGreen.append(clg)
         
     #one list for all variables of the template
-    completeList = zip(plotList, monthList, averageUsage, countRed, countOrange, countGreen, sharesList)
+    completeList = zip(plotList, monthList, averageUsage, countRed, countOrange, countYellow, countGreen, countLightGreen, sharesList)
 
     context = {
         'plots': completeList
