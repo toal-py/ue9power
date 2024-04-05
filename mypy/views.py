@@ -12,7 +12,7 @@ import os
 from django.views.decorators.cache import cache_page
 
 from mypy.apiInternal import apiCall
-from mypy.plotView import renderPlot
+from mypy.plotView import plotMonthlyOverview, plotMonthlyShare, getShareValues
 
 def homeView(request):
     htmlString = "<h1>Hello World</h1><p><a href='/power'>Hier geht es zum letzten Stromverbrauch</a></p><p><a href='/current-weather'>Hier geht es zur aktuellen Temperatur</a></p><p><a href='/preg'>Hier geht es zum Schwangerschaftsüberblick</a></p>" 
@@ -53,7 +53,7 @@ def site_pregOverview(request):
     pregOverview = render_to_string('preg_overview.html', context=context_preg)
     return HttpResponse(pregOverview)
 
-@cache_page(21600)
+#@cache_page(21600)
 def powerOverview (request):
     dotenv.read_dotenv('/var/www/python-project/ue9power/.env')
     #different connect info in .env because of render_to_string which results in multiple quotes (""host")
@@ -108,14 +108,13 @@ def powerOverview (request):
     if dayOfMonth != 1:
         shortFormatDays = {elem[0][-10:-8]:elem[1] for elem in cm['result'].items()}
         
-        plot = renderPlot(shortFormatDays)
+        plot = plotMonthlyOverview(shortFormatDays)
     else:
         pass
 
     #current month for title of visualization
 
     monthList = ['dummy', 'Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember']
-
 
     contextPower={
         'day':d[0],
@@ -135,3 +134,82 @@ def powerOverview (request):
 
 def powerApiDoc (request):
     return (HttpResponse(render_to_string('powerApiDoc.html')))
+
+#cache
+def plotPage (request):
+    dotenv.read_dotenv('/var/www/python-project/ue9power/.env')
+    #different connect info in .env because of render_to_string which results in multiple quotes (""host")
+    conn = psycopg.connect(os.environ.get('POSTGRES_VIEWS'))
+    cur = conn.cursor()
+
+    cur.execute('SELECT month_year FROM monthly_power;')
+    range = cur.fetchall()
+
+    cur.close()
+    conn.close()
+
+    monthNames = ['dummy', 'Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember']
+    plotList = []
+    monthList = []
+    averageUsage = []
+    countRed = []
+    countOrange = []
+    countYellow = []
+    countGreen = []
+    countLightGreen = []
+    sharesList = []
+
+    for elem in range:
+        singlePlot = json.loads(apiCall(mode = 'm', dates = elem[0][-6], expand = True))
+
+        dom = calendar.monthrange(date.today().year, int(elem[0][-6]))[1]
+
+        shareValues = getShareValues(singlePlot, month = int(elem[0][-6]))
+        sharesList.append(plotMonthlyShare(shareValues))
+        #plot monthly overview
+        shortFormatDays = {elem[0][-10:-8] : elem[1] for elem in singlePlot['result']['days'].items()}
+        plotList.append(plotMonthlyOverview(shortFormatDays))
+
+        #titles for individual month
+        monthList.append(monthNames[int(elem[0][-6])])
+
+        #average usage per month
+        avg = 0.0
+        for day in singlePlot['result']['days'].values():
+            avg += day
+        
+        avgM = avg / dom
+        
+        averageUsage.append(round(avgM,2))
+
+        #number of 'colored' days
+        cr = 0
+        co = 0
+        cy = 0
+        cg = 0
+        clg = 0
+        for elm in singlePlot['result']['days'].values():
+            if elm >= 9.0:
+                cr += 1
+            elif elm < 9.0 and elm >= 7.0:
+                co += 1
+            elif elm < 7.0 and elm >= 5.0:
+                cy += 1
+            elif elm < 5.0 and elm >= 3.0:
+                cg += 1
+            else:
+                clg += 1
+        
+        countRed.append(cr)
+        countOrange.append(co)
+        countYellow.append(cy)
+        countGreen.append(cg)
+        countLightGreen.append(clg)
+        
+    #one list for all variables of the template
+    completeList = zip(plotList, monthList, averageUsage, countRed, countOrange, countYellow, countGreen, countLightGreen, sharesList)
+
+    context = {
+        'plots': completeList
+    }
+    return (HttpResponse(render_to_string('plotPage.html', context=context)))

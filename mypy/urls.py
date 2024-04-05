@@ -17,7 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from .views import homeView, getCurrentWeather, site_pregOverview, powerOverview, powerApiDoc
+from .views import homeView, getCurrentWeather, site_pregOverview, powerOverview, powerApiDoc, plotPage
 from mypy.apiView import powerApi
 
 urlpatterns = [
@@ -28,4 +28,5 @@ urlpatterns = [
     path('power', powerOverview),
     path('power/api', powerApi),
     path('power/api-doc', powerApiDoc),
+    path('power/plots', plotPage),
 ]
