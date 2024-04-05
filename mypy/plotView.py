@@ -8,7 +8,7 @@ from datetime import date
 
 
 def plotMonthlyOverview(data):
-    colorPal = ['tab:red' if elem > 9.0 else 'tab:orange' if elem >= 7.0 else 'yellow' if elem >= 5.0 else 'tab:green' if elem >= 3.0 else 'light:green' for elem in data.values()]
+    colorPal = ['tab:red' if elem > 9.0 else 'tab:orange' if elem >= 7.0 else '#FFFF00' if elem >= 5.0 else 'tab:green' if elem >= 3.0 else 'light:green' for elem in data.values()]
     power = [float(elem) for elem in data.values()]
     plotFigure = plt.figure()
     plot = sns.barplot(data=data, x = list(data.keys()), y = power, palette=colorPal, saturation=0.75, hue=list(data.keys()), legend=False)    
