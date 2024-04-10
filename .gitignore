@@ -7,3 +7,5 @@
 /lib/
 /mypy/power/logValues.txt
 /mypy/__pycache__/
+/nginx/zerossl_certificate.crt
+/nginx/private.key
