@@ -9,3 +9,7 @@
 /mypy/__pycache__/
 /nginx/zerossl_certificate.crt
 /nginx/private.key
+/Scripts
+/win_venv
+/mypy/__pycache__
+/mypy/__pycache__

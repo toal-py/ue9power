@@ -2,6 +2,8 @@ services:
   web:
     build: .
     command: gunicorn mypy.wsgi:application --bind 0.0.0.0:8000
+    volumes:
+      - static_volume:/dsh/staticfiles
     expose:
       - 8000
     env_file:
@@ -18,6 +20,8 @@ services:
       - POSTGRES_DB=django
   nginx:
     build: ./nginx
+    volumes:
+      - static_volume:/staticfiles
     ports:
       - 80:80
       - 443:443
@@ -35,3 +39,4 @@ services:
 
 volumes:
   pgdata:
+  static_volume:

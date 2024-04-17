@@ -159,6 +159,7 @@ def plotPage (request):
     countLightGreen = []
     sharesList = []
 
+    #elem in this case is a single month.
     for elem in range:
         singlePlot = json.loads(apiCall(mode = 'm', dates = elem[0][-6], expand = True))
 
