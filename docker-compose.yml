@@ -3,7 +3,7 @@ services:
     build: .
     command: gunicorn mypy.wsgi:application --bind 0.0.0.0:8000
     volumes:
-      - static_volume:/dsh/staticfiles
+      - /staticfiles:/dsh/staticfiles
     expose:
       - 8000
     env_file:
@@ -21,7 +21,7 @@ services:
   nginx:
     build: ./nginx
     volumes:
-      - static_volume:/staticfiles
+      - /staticfiles:/staticfiles
     ports:
       - 80:80
       - 443:443
@@ -39,4 +39,3 @@ services:
 
 volumes:
   pgdata:
-  static_volume:
