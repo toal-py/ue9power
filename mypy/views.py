@@ -190,13 +190,13 @@ def plotPage (request):
         cg = 0
         clg = 0
         for elm in singlePlot['result']['days'].values():
-            if elm >= 9.0:
+            if elm >= 10.0:
                 cr += 1
-            elif elm < 9.0 and elm >= 7.0:
+            elif elm < 10.0 and elm >= 8.0:
                 co += 1
-            elif elm < 7.0 and elm >= 5.0:
+            elif elm < 8.0 and elm >= 6.0:
                 cy += 1
-            elif elm < 5.0 and elm >= 3.0:
+            elif elm < 6.0 and elm >= 4.0:
                 cg += 1
             else:
                 clg += 1

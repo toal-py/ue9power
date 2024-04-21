@@ -8,7 +8,7 @@ from datetime import date
 
 
 def plotMonthlyOverview(data):
-    colorPal = ['tab:red' if elem >= 9.0 else 'tab:orange' if elem >= 7.0 else 'yellow' if elem >= 5.0 else 'tab:green' if elem >= 3.0 else 'lightgreen' for elem in data.values()]
+    colorPal = ['tab:red' if elem >= 10.0 else 'tab:orange' if elem >= 8.0 else 'yellow' if elem >= 6.0 else 'tab:green' if elem >= 4.0 else 'lightgreen' for elem in data.values()]
     power = [float(elem) for elem in data.values()]
     plotFigure = plt.figure()
     plot = sns.barplot(data=data, x = list(data.keys()), y = power, palette=colorPal, saturation=0.75, hue=list(data.keys()), legend=False)    
@@ -78,13 +78,13 @@ def getShareValues(data, month, year = date.today().year):
     countGreen = []
     countLightGreen = []
     for elem in data['result']['days'].values():
-        if elem >= 9.0:
+        if elem >= 10.0:
             countRed.append(elem)
-        elif elem < 9.0 and elem >= 7.0:
+        elif elem < 10.0 and elem >= 8.0:
             countOrange.append(elem)
-        elif elem < 7.0 and elem >= 5.0:
+        elif elem < 8.0 and elem >= 6.0:
             countYellow.append(elem)
-        elif elem < 5.0 and elem >= 3.0:
+        elif elem < 6.0 and elem >= 4.0:
             countGreen.append(elem)
         else:
             countLightGreen.append(elem)
