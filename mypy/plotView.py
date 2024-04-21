@@ -24,7 +24,11 @@ def plotMonthlyOverview(data):
 
 def plotMonthlyShare(data):
     plotFigure = plt.figure()
-    percentageData = {'lightGreen': data['lightGreen'], 'green': data['green'] + data['lightGreen'], 'yellow': (sum(data.values()) - data['red'] - data['orange']), 'orange': (sum(data.values()) - data['red']), 'red': sum(data.values())}
+    percentageData = {'lightGreen': data['lightGreen'],
+                      'green': data['green'] + data['lightGreen'],
+                      'yellow': (sum(data.values()) - data['red'] - data['orange']), 
+                      'orange': (sum(data.values()) - data['red']), 
+                      'red': sum(data.values())}
     dframe = pd.DataFrame(percentageData, index = [0])
 
     bar1 = sns.barplot(data = dframe, x = 'red', y = 'red', hue = 'red', orient = 'h', width = 0.4, palette = ['tab:red'], legend = False)
@@ -85,7 +89,11 @@ def getShareValues(data, month, year = date.today().year):
         else:
             countLightGreen.append(elem)
     daysOfMonth = calendar.monthrange(date.today().year, month)[1]
-    shares = {'lightGreen': round(((len(countLightGreen) / daysOfMonth) * 100), 2), 'green': round(((len(countGreen) / daysOfMonth) * 100), 2), 'yellow': round(((len(countYellow) / daysOfMonth) * 100), 2), 'orange': round(((len(countOrange) / daysOfMonth) * 100), 2), 'red': round(((len(countRed) / daysOfMonth) * 100), 2)}
+    shares = {'lightGreen': round(((len(countLightGreen) / daysOfMonth) * 100), 2), 
+              'green': round(((len(countGreen) / daysOfMonth) * 100), 2), 
+              'yellow': round(((len(countYellow) / daysOfMonth) * 100), 2), 
+              'orange': round(((len(countOrange) / daysOfMonth) * 100), 2), 
+              'red': round(((len(countRed) / daysOfMonth) * 100), 2)}
     return shares
     
 

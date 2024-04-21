@@ -3,7 +3,7 @@ services:
     build: .
     command: gunicorn mypy.wsgi:application --bind 0.0.0.0:8000
     volumes:
-      - /var/www/python-project/ue9power/staticfiles:/dsh/staticfiles
+      - ./staticfiles:/dsh/staticfiles
     expose:
       - 8000
     env_file:
@@ -21,7 +21,7 @@ services:
   nginx:
     build: ./nginx
     volumes:
-      - /var/www/python-project/ue9power/staticfiles:/staticfiles
+      - ./staticfiles:/staticfiles
     ports:
       - 80:80
       - 443:443
