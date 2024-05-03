@@ -1,0 +1,75 @@
+{% load static %}
+<div id="dropdowns" data-dropdowns="{{ dropdowns }}"></div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script type="text/javascript">
+
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+function comparison (){
+
+  var year1 = document.getElementById("year1").value;
+  var year2 = document.getElementById("year2").value;
+  var month1 = document.getElementById("month1").value;
+  var month2 = document.getElementById("month2").value;
+  var csrftoken = getCookie('csrftoken');
+  var url = "/power/comparison/api";
+
+
+  var compData = `{"year1": "${year1}", "year2": "${year2}", "month1": "${month1}", "month2": "${month2}"}`;
+
+  $.ajax({
+    url: url,
+    method: "POST",
+    headers: {'X-CSRFToken': csrftoken},
+    content_type: 'application/json',
+    data: JSON.stringify(compData),
+    error: function(xhr, status, error) {
+      console.error("Error:", error);
+    },
+    success: function(response) {
+      alert("Data successfully submitted!");
+      console.log(response);
+      document.getElementById("result").innerHTML = response;
+    }
+  }
+  );
+};
+
+
+
+
+</script>
+<script src="/static/dynamicDropdowns.js"></script>
+
+    Year 1: <select name="year1" id="year1">
+      <option value="" selected="selected">Select year</option>
+    </select>
+    <br><br>
+    Month 1: <select name="month1" id="month1">
+      <option value="" selected="selected">Please select year first</option>
+    </select>
+    <br><br>
+    Year 2: <select name="year2" id="year2">
+        <option value="" selected="selected">Select year</option>
+      </select>
+      <br><br>
+    Month 2: <select name="month2" id="month2">
+        <option value="" selected="selected">Please select year first</option>
+      </select>   
+    <button onclick = comparison()>Vergleichen</button>
+<br><br>
+<div id="result"></div>

@@ -9,11 +9,11 @@
 <p><b>Verlauf:</b></p>
 <p><img src="data:image/png;base64,{{ plot }}"/></p>
 <p>Durchschnittlicher Verbrauch: {{ average }} kWh<br>
-Anzahl Tage über 9 kWh: {{ red }}<br>
-Anzahl Tage zwischen 7 und 9 kWh: {{ orange }}<br>
-Anzahl Tage zwischen 5 und 7 kWh: {{ yellow }}<br>
-Anzahl Tage zwischen 3 und 5 kWh: {{ green }}<br>
-Anzahl Tage unter 3 kWh: {{ lightgreen }}</p>
+Tage mit hohem Verbrauch (>= 10 kWh): {{ red }}<br>
+Tage mit überdurchschnittlichem Verbrauch (8-10 kWh): {{ orange }}<br>
+Tage mit durchschnittlichem Verbrauch (6-8 kWh): {{ yellow }}<br>
+Tage mit niedrigem Verbrauch (4-6 kWh): {{ green }}<br>
+Tage mit sehr niedrigem Verbrauch (<= 4 kWh): {{ lightgreen }}</p>
 <p><b>Prozentuale Verteilung:</b></p>
 <p><img src="data:image/png;base64,{{ sharePlot }}"/></p>
 {% endfor %}

@@ -17,6 +17,7 @@ def plotMonthlyOverview(data):
     plotFile = BytesIO()
     plotFigure.set_figwidth(10)    
     plotFigure.savefig(plotFile, format='png')
+    plt.close(plotFigure)
     plotFile.seek(0)
     encodedFile = base64.b64encode(plotFile.getbuffer())
     plotFile.close()
@@ -65,6 +66,7 @@ def plotMonthlyShare(data):
     plotFigure.set_figheight(2.0)
     plotFigure.set_figwidth(10)    
     plotFigure.savefig(plotFile, format='png')
+    plt.close(plotFigure)
     plotFile.seek(0)
     encodedFile = base64.b64encode(plotFile.getbuffer())
     plotFile.close()
@@ -96,5 +98,18 @@ def getShareValues(data, month, year = date.today().year):
               'red': round(((len(countRed) / daysOfMonth) * 100), 2)}
     return shares
     
-
+def plotComparison(data):
+    plotFigure = plt.figure()
+    
+    sns.set_style('darkgrid')
+    sns.lineplot(data = data, palette = ['lightsalmon', 'lightsteelblue'], markers = False, dashes = False).set(xticklabels = [], yticklabels = [])
+    
+    plotFigure.set_figwidth(10)
+    plotFile = BytesIO()   
+    plotFigure.savefig(plotFile, format='png')
+    plt.close(plotFigure)
+    plotFile.seek(0)
+    encodedFile = base64.b64encode(plotFile.getbuffer())
+    plotFile.close()
+    return encodedFile.decode('utf-8')
 #td = {'22.01.2024': 6.55, '23.01.2024': 4.75, '24.01.2024': 11.92}
