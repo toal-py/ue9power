@@ -33,6 +33,7 @@ ALLOWED_HOSTS = [
     'web.toal.wtf'
 ]
 
+CSRF_TRUSTED_ORIGINS = ['https://web.toal.wtf']
 
 # Application definition
 
