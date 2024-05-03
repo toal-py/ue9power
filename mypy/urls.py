@@ -17,16 +17,15 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from .views import homeView, getCurrentWeather, site_pregOverview, powerOverview, powerApiDoc, plotPage
+from .views import homeView, powerOverview, plotPage, comparisonPage, comparisonAPI
 from mypy.apiView import powerApi
 
 urlpatterns = [
     path('', homeView),
-    path('preg', site_pregOverview),
-    path('current-weather', getCurrentWeather),
     path('admin/', admin.site.urls),
     path('power', powerOverview),
     path('power/api', powerApi),
-    path('power/api-doc', powerApiDoc),
     path('power/plots', plotPage),
+    path('power/comparison', comparisonPage),
+    path('power/comparison/api', comparisonAPI, name = 'comparisonAPI')
 ]

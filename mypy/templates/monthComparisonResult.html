@@ -1,0 +1,87 @@
+<link href="/static/style.css" rel="stylesheet" />
+
+<h3>Vergleich von {{ month1 }} {{ year1 }} und {{ month2 }} {{ year2 }}</h3>
+
+<p>
+    <table style="background-color: rgb(204, 206, 209);">
+        <tr>
+            <th>
+
+            </th>
+        <th>
+            {{ month1 }} {{ year1 }}
+        </th>
+        <th>
+            {{ month2 }} {{ year2 }}
+        </th>
+        </tr>
+        <tr>
+            <td>
+                Gesamtverbrauch
+            </td>
+            <td>
+                {{ totalConsumption1 }} kWh
+            </td>
+            <td>
+                {{ totalConsumption2 }} kWh
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Durchschnittsverbrauch
+            </td>
+            <td {% if meanValue1 < meanValue2 %} style="color:#43b605;font-weight:900" {% elif meanValue1 == meanValue2 %}{% else %} style="color:#ff0000" {% endif %}>
+                {{ meanValue1 }} kWh/Tag
+            </td>
+            <td {% if meanValue1 > meanValue2 %} style="color:#43b605;font-weight:900" {% elif meanValue1 == meanValue2 %}{% else %} style="color:#ff0000" {% endif %}>
+                {{ meanValue2 }} kWh/Tag
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Höchster Verbrauch (Datum)
+            </td>
+            <td {% if highestConsumptionValue1 < highestConsumptionValue2 %} style="color:#43b605;font-weight:900" {% elif highestConsumptionValue1 == highestConsumptionValue2 %}{% else %} style="color:#ff0000" {% endif %}>
+                {{ highestConsumptionValue1 }} kWh ({{ highestConsumptionDay1 }})
+            </td>
+            <td {% if highestConsumptionValue1 > highestConsumptionValue2 %} style="color:#43b605;font-weight:900" {% elif highestConsumptionValue1 == highestConsumptionValue2 %}{% else %} style="color:#ff0000" {% endif %}>
+                {{ highestConsumptionValue2 }} kWh ({{ highestConsumptionDay2 }})
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Niedrigster Verbrauch (Datum)
+            </td>
+            <td {% if lowestConsumptionValue1 < lowestConsumptionValue2 %} style="color:#43b605;font-weight:900" {% elif lowestConsumptionValue1 == lowestConsumptionValue2 %}{% else %} style="color:#ff0000" {% endif %}>
+                {{ lowestConsumptionValue1 }} kWh ({{ lowestConsumptionDay1 }})
+            </td>
+            <td {% if lowestConsumptionValue1 > lowestConsumptionValue2 %} style="color:#43b605;font-weight:900" {% elif lowestConsumptionValue1 == lowestConsumptionValue2 %}{% else %} style="color:#ff0000" {% endif %}>
+                {{ lowestConsumptionValue2 }} kWh ({{ lowestConsumptionDay2 }})
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Anteil Tage mit besonders hohem Verbrauch
+            </td>
+            <td {% if shareAboveAverageMonth1 < shareAboveAverageMonth2 %} style="color:#43b605;font-weight:900" {% elif shareAboveAverageMonth1 == shareAboveAverageMonth2 %}{% else %} style="color:#ff0000" {% endif %}>
+                {{ shareAboveAverageMonth1 }} %
+            </td>
+            <td {% if shareAboveAverageMonth1 > shareAboveAverageMonth2 %} style="color:#43b605;font-weight:900" {% elif shareAboveAverageMonth1 == shareAboveAverageMonth2 %}{% else %} style="color:#ff0000" {% endif %}>
+                {{ shareAboveAverageMonth2 }} %
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Anteil Tage mit besonders niedrigem Verbrauch
+            </td>
+            <td {% if shareBelowAverageMonth1 > shareBelowAverageMonth2 %} style="color:#43b605;font-weight:900" {% elif shareBelowAverageMonth1 == shareBelowAverageMonth2 %}{% else %} style="color:#ff0000" {% endif %}>
+                {{ shareBelowAverageMonth1 }} %
+            </td>
+            <td {% if shareBelowAverageMonth1 < shareBelowAverageMonth2 %} style="color:#43b605;font-weight:900" {% elif shareBelowAverageMonth1 == shareBelowAverageMonth2 %}{% else %} style="color:#ff0000" {% endif %}>
+                {{ shareBelowAverageMonth2 }} %
+            </td>
+        </tr>
+    </table>
+    <h4>Verlauf mit Cumulative Moving Averages</h4>
+    <p><img src="data:image/png;base64,{{ plot }}"/></p>
+</p>
