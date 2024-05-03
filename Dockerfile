@@ -23,4 +23,4 @@ RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 
 COPY . .
-COPY /dsh/.env /var/www/python-project/ue9power/
+COPY .env /var/www/python-project/ue9power/
