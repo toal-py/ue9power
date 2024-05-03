@@ -103,7 +103,8 @@ def plotComparison(data):
     
     sns.set_style('darkgrid')
     sns.lineplot(data = data, palette = ['lightsalmon', 'lightsteelblue'], markers = False, dashes = False).set(xticklabels = [], yticklabels = [])
-    
+    plt.ylim(top = 11)
+
     plotFigure.set_figwidth(10)
     plotFile = BytesIO()   
     plotFigure.savefig(plotFile, format='png')
