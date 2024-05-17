@@ -10,6 +10,7 @@ import calendar
 import dotenv
 import psycopg
 import pandas as pd
+import math
 import os
 from django.views.decorators.cache import cache_page
 
@@ -34,6 +35,8 @@ def powerOverview (request):
     m=cur.fetchone()
     month = m[0] if (m) else 'Bisher kein Monat in der DB'
     mPower = m[1] if (m) else 'Bisher keine Daten in der DB'
+    cur.execute('SELECT power_consumption FROM daily_power ORDER BY power_consumption DESC LIMIT 1;')
+    ceiling = cur.fetchone()
     cur.close()
     conn.close()
 
@@ -75,7 +78,7 @@ def powerOverview (request):
     if dayOfMonth != 1:
         shortFormatDays = {elem[0][-10:-8]:elem[1] for elem in cm['result'].items()}
         
-        plot = plotMonthlyOverview(shortFormatDays)
+        plot = plotMonthlyOverview(shortFormatDays, math.ceil(ceiling[0]))
     else:
         pass
 
@@ -109,6 +112,9 @@ def plotPage (request):
     cur.execute('SELECT month_year FROM monthly_power;')
     range = cur.fetchall()
 
+    cur.execute('SELECT power_consumption FROM daily_power ORDER BY power_consumption DESC LIMIT 1;')
+    ceiling = cur.fetchone()
+
     cur.close()
     conn.close()
 
@@ -133,7 +139,7 @@ def plotPage (request):
         sharesList.append(plotMonthlyShare(shareValues))
         #plot monthly overview
         shortFormatDays = {elem[0][-10:-8] : elem[1] for elem in singlePlot['result']['days'].items()}
-        plotList.append(plotMonthlyOverview(shortFormatDays))
+        plotList.append(plotMonthlyOverview(shortFormatDays, math.ceil(ceiling[0])))
 
         #titles for individual month
         monthList.append(monthNames[int(elem[0][-6])])

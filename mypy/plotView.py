@@ -7,16 +7,19 @@ import calendar
 from datetime import date
 
 
-def plotMonthlyOverview(data):
+def plotMonthlyOverview(data, ceiling):
     colorPal = ['tab:red' if elem >= 10.0 else 'tab:orange' if elem >= 8.0 else 'yellow' if elem >= 6.0 else 'tab:green' if elem >= 4.0 else 'lightgreen' for elem in data.values()]
     power = [float(elem) for elem in data.values()]
     plotFigure = plt.figure()
-    plot = sns.barplot(data=data, x = list(data.keys()), y = power, palette=colorPal, saturation=0.75, hue=list(data.keys()), legend=False)    
+    plot = sns.barplot(data=data, x = list(data.keys()), y = power, palette=colorPal, saturation=0.75, hue=list(data.keys()), legend=False)
+
+    plt.ylim(0, ceiling)
+
     for bar in plot.containers:
         plot.bar_label(bar, fontsize=8)
     plotFile = BytesIO()
     plotFigure.set_figwidth(10)    
-    plotFigure.savefig(plotFile, format='png')
+    plotFigure.savefig(plotFile, format='png', bbox_inches='tight')
     plt.close(plotFigure)
     plotFile.seek(0)
     encodedFile = base64.b64encode(plotFile.getbuffer())
@@ -60,12 +63,14 @@ def plotMonthlyShare(data):
     bar5.set(yticklabels=[])
     bar5.set(ylabel=None)
     bar5.tick_params(left=False)
-    bar5.set(xlabel=None)     
-    
+    bar5.set(xlabel=None)
+
+    plt.xlim(0, 100)   
+
     plotFile = BytesIO()
     plotFigure.set_figheight(2.0)
     plotFigure.set_figwidth(10)    
-    plotFigure.savefig(plotFile, format='png')
+    plotFigure.savefig(plotFile, format='png', bbox_inches='tight')
     plt.close(plotFigure)
     plotFile.seek(0)
     encodedFile = base64.b64encode(plotFile.getbuffer())
@@ -103,11 +108,11 @@ def plotComparison(data):
     
     sns.set_style('darkgrid')
     sns.lineplot(data = data, palette = ['lightsalmon', 'lightsteelblue'], markers = False, dashes = False).set(xticklabels = [], yticklabels = [])
-    plt.ylim(5, 9)
+    plt.ylim(5, 8)
 
     plotFigure.set_figwidth(10)
     plotFile = BytesIO()   
-    plotFigure.savefig(plotFile, format='png')
+    plotFigure.savefig(plotFile, format='png', bbox_inches='tight')
     plt.close(plotFigure)
     plotFile.seek(0)
     encodedFile = base64.b64encode(plotFile.getbuffer())

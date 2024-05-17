@@ -41,6 +41,7 @@ window.onload = function() {
     else if (monthSel1.value == monthSel2.value && yearSel1.value == yearSel2.value) {
       monthSel2.length = 1;
       var z2 = dropdowns[yearSel2.value];
+      alert("Monat kann nicht mit sich selbst verglichen werden. Bitte anderen Vergleichsmonat wählen.");
       for (var i = 0; i < z2.length; i++) {
       if (z2[i] != monthSel1.value || yearSel1.value != yearSel2.value){
       monthSel2.options[monthSel2.options.length] = new Option(z2[i], z2[i]);
@@ -59,6 +60,7 @@ window.onload = function() {
     else if (monthSel1.value == monthSel2.value && yearSel1.value == yearSel2.value){
       monthSel1.length = 1;
       var z1 = dropdowns[yearSel1.value];
+      alert("Monat kann nicht mit sich selbst verglichen werden. Bitte anderen Vergleichsmonat wählen.");
       for (var i = 0; i < z1.length; i++) {
       if (z1[i] != monthSel2.value || yearSel1.value != yearSel2.value){
       monthSel1.options[monthSel1.options.length] = new Option(z1[i], z1[i]);
