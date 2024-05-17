@@ -1,4 +1,6 @@
-{% load static %}
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="/static/style.css" rel="stylesheet" />
+
 <div id="dropdowns" data-dropdowns="{{ dropdowns }}"></div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script type="text/javascript">
@@ -41,7 +43,6 @@ function comparison (){
       console.error("Error:", error);
     },
     success: function(response) {
-      alert("Data successfully submitted!");
       console.log(response);
       document.getElementById("result").innerHTML = response;
     }
@@ -54,22 +55,34 @@ function comparison (){
 
 </script>
 <script src="/static/dynamicDropdowns.js"></script>
+<p><a href='/power'>Zum laufenden Monat</a></p>
 
-    Year 1: <select name="year1" id="year1">
-      <option value="" selected="selected">Select year</option>
+<div class="navbar">
+  <a href="/power">Übersicht aktueller Monat</a>
+  <a href="/power/plots">Übersicht vergangene Monate</a>
+  <a href="/power/comparison">Monatsvergleiche</a>
+</div>
+
+<div class="main">
+  <div class="container">
+    Jahr 1: <select name="year1" id="year1">
+      <option value="" selected="selected">Jahr auswählen</option>
     </select>
     <br><br>
-    Month 1: <select name="month1" id="month1">
-      <option value="" selected="selected">Please select year first</option>
+    Monat 1: <select name="month1" id="month1">
+      <option value="" selected="selected">Bitte erst Jahr auswählen</option>
     </select>
-    <br><br>
-    Year 2: <select name="year2" id="year2">
-        <option value="" selected="selected">Select year</option>
+  </div>
+  <div class="container">
+    Jahr 2: <select name="year2" id="year2">
+        <option value="" selected="selected">Jahr auswählen</option>
       </select>
       <br><br>
-    Month 2: <select name="month2" id="month2">
-        <option value="" selected="selected">Please select year first</option>
-      </select>   
+    Monat 2: <select name="month2" id="month2">
+        <option value="" selected="selected">Bitte erst Jahr auswählen</option>
+      </select>
+    </div>   
     <button onclick = comparison()>Vergleichen</button>
+</div>
 <br><br>
 <div id="result"></div>

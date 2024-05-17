@@ -1,19 +1,75 @@
 <link href="/static/style.css" rel="stylesheet" />
 
+<div class="navbar">
+    <a href="/power">Übersicht aktueller Monat</a>
+    <a href="/power/plots">Übersicht vergangene Monate</a>
+    <a href="/power/comparison">Monatsvergleiche</a>
+</div>
+
+<div class="main">
 <h2>Übersicht vergangener Monate</h2>
 
-<p><a href='/power'>Zum laufenden Monat</a></p>
-
 {% for plot, month, average, red, orange, yellow, green, lightgreen, sharePlot in plots %}
-<h3>{{ month }}</h3>
+<h3><u>{{ month }}</u></h3>
 <p><b>Verlauf:</b></p>
 <p><img src="data:image/png;base64,{{ plot }}"/></p>
-<p>Durchschnittlicher Verbrauch: {{ average }} kWh<br>
-Tage mit hohem Verbrauch (>= 10 kWh): {{ red }}<br>
-Tage mit überdurchschnittlichem Verbrauch (8-10 kWh): {{ orange }}<br>
-Tage mit durchschnittlichem Verbrauch (6-8 kWh): {{ yellow }}<br>
-Tage mit niedrigem Verbrauch (4-6 kWh): {{ green }}<br>
-Tage mit sehr niedrigem Verbrauch (<= 4 kWh): {{ lightgreen }}</p>
+
+<table>
+    <tr>
+        <td>
+            Durchschnittlicher Verbrauch
+        </td>
+        <td>
+            {{ average }} kWh
+        </td>
+    </tr>
+    <tr>
+        <td>
+            Tage mit hohem Verbrauch (>= 10 kWh)
+        </td>
+        <td>
+            {{ red }}
+        </td>
+    </tr>
+    <tr>
+        <td>
+            Tage mit überdurchschnittlichem Verbrauch (8-10 kWh)
+        </td>
+        <td>
+            {{ orange }}
+        </td>
+    </tr>
+    <tr>
+        <td>
+            Tage mit durchschnittlichem Verbrauch (6-8 kWh)
+        </td>
+        <td>
+            {{ yellow }}
+        </td>
+    </tr>
+    <tr>
+        <td>
+            Tage mit niedrigem Verbrauch (4-6 kWh)
+        </td>
+        <td>
+            {{ green }}
+        </td>
+    </tr>
+    <tr>
+        <td>
+            Tage mit sehr niedrigem Verbrauch (<= 4 kWh)
+        </td>
+        <td>
+            {{ lightgreen }}
+        </td>
+    </tr>
+</table>
+
 <p><b>Prozentuale Verteilung:</b></p>
 <p><img src="data:image/png;base64,{{ sharePlot }}"/></p>
+<br>
+<hr>
+<br>
 {% endfor %}
+
+</div>
