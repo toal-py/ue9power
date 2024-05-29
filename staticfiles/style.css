@@ -8,6 +8,10 @@ th, td {
     padding: 5px;
   }
 
+body {
+    margin: 0px;
+}
+
 * {
     box-sizing: border-box;
   }
@@ -21,7 +25,7 @@ th, td {
 
 .navbar {
 overflow: hidden;
-background-color: #333;
+background-color: #61868d;
 position: fixed;
 top: 0;
 width: 100%;
@@ -31,7 +35,7 @@ width: 100%;
 .navbar a {
 float: left;
 display: block;
-color: #f2f2f2;
+color: white;
 text-align: center;
 padding: 14px 16px;
 text-decoration: none;
@@ -45,8 +49,17 @@ color: black;
 
 
 .main {
-margin-top: 80px; 
+margin-top: 80px;
+padding-left: 3px;
+padding-right: 3px;
+padding-bottom: 3px;
 }
+
+.result {
+  padding-left: 3px;
+  padding-right: 3px;
+  padding-bottom: 3px;
+  }
 
 @media screen and (max-width: 600px) {
     .container {
@@ -55,7 +68,7 @@ margin-top: 80px;
     .navbar a {
         float: left;
         display: block;
-        color: #f2f2f2;
+        color: white;
         text-align: center;
         padding: 14px 16px;
         text-decoration: none;
@@ -63,5 +76,10 @@ margin-top: 80px;
         }
     .main {
         margin-top: 160px;
+        padding-left: 3px;
+        padding-right: 3px;
+        padding-bottom: 3px;
+        width: 100%;
     }
+    
   }

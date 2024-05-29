@@ -1,3 +1,4 @@
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link href="/static/style.css" rel="stylesheet" />
 
 <div class="navbar">
@@ -26,7 +27,6 @@
 <p>Hochrechnung für laufenden Monat noch nicht möglich, da noch keine Daten zur Verfügung stehen. Ab morgen werden Daten zur Verfügung stehen.</p>
 {% endif %}
 
-<br>
 <p><h2>Verlauf im {{ currentMonthName }}</h2></p>
 
 {% if dayOfMonth > 1  %}
@@ -36,10 +36,4 @@
 <p>Visualisierung für laufenden Monat noch nicht möglich, da noch keine Daten zur Verfügung stehen. Ab morgen werden Daten zur Verfügung stehen.</p>
 
 {% endif %}
-
-<p><a href='/power/plots'>Zur Übersicht der vergangenen Monate</a></p>
-
-<p><a href='/power/comparison'>Zum Vergleich</a></p>
-
-<p><a href='/'>Zurück</a></p>
 </div>
