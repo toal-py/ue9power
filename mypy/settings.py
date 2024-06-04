@@ -30,7 +30,8 @@ ALLOWED_HOSTS = [
     'localhost',
     '127.0.0.1',
     '192.168.178.61',
-    'web.toal.wtf'
+    'web.toal.wtf',
+    '192.168.178.74'
 ]
 
 CSRF_TRUSTED_ORIGINS = ['https://web.toal.wtf']

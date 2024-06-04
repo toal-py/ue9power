@@ -93,7 +93,7 @@ def powerOverview (request):
         'wPower':w[1],
         'month':month,
         'mPower':mPower,
-        'extrapolationCurrentMonth':ep,
+        'extrapolationCurrentMonth':'{:.2f}'.format(ep),
         'compLastMonthPercent':round((abs(clm) * 100), 2),
         'compLastMonth':clm,
         'plot':plot if dayOfMonth != 1 else None,
@@ -121,6 +121,7 @@ def plotPage (request):
     monthNames = ['dummy', 'Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember']
     plotList = []
     monthList = []
+    totalUsage= []
     averageUsage = []
     countRed = []
     countOrange = []
@@ -143,6 +144,10 @@ def plotPage (request):
 
         #titles for individual month
         monthList.append(monthNames[int(elem[0][-6])])
+
+        #total usage per month
+
+        totalUsage.append(singlePlot['result']['month']['power_consumption'])
 
         #average usage per month
         avg = 0.0
@@ -178,7 +183,7 @@ def plotPage (request):
         countLightGreen.append(clg)
         
     #one list for all variables of the template
-    completeList = zip(plotList, monthList, averageUsage, countRed, countOrange, countYellow, countGreen, countLightGreen, sharesList)
+    completeList = zip(plotList, monthList,totalUsage, averageUsage, countRed, countOrange, countYellow, countGreen, countLightGreen, sharesList)
 
     context = {
         'plots': completeList

@@ -11,6 +11,9 @@ def plotMonthlyOverview(data, ceiling):
     colorPal = ['tab:red' if elem >= 10.0 else 'tab:orange' if elem >= 8.0 else 'yellow' if elem >= 6.0 else 'tab:green' if elem >= 4.0 else 'lightgreen' for elem in data.values()]
     power = [float(elem) for elem in data.values()]
     plotFigure = plt.figure()
+
+    sns.set_style('darkgrid')
+
     plot = sns.barplot(data=data, x = list(data.keys()), y = power, palette=colorPal, saturation=0.75, hue=list(data.keys()), legend=False)
 
     plt.ylim(0, ceiling)
@@ -34,6 +37,8 @@ def plotMonthlyShare(data):
                       'orange': (sum(data.values()) - data['red']), 
                       'red': sum(data.values())}
     dframe = pd.DataFrame(percentageData, index = [0])
+
+    sns.set_style('darkgrid')
 
     bar1 = sns.barplot(data = dframe, x = 'red', y = 'red', hue = 'red', orient = 'h', width = 0.4, palette = ['tab:red'], legend = False)
     bar1.set(yticklabels=[])
@@ -107,8 +112,8 @@ def plotComparison(data):
     plotFigure = plt.figure()
     
     sns.set_style('darkgrid')
-    sns.lineplot(data = data, palette = ['lightsalmon', 'lightsteelblue'], markers = False, dashes = False).set(xticklabels = [], yticklabels = [])
-    plt.ylim(5, 8)
+    sns.lineplot(data = data, palette = ['lightsalmon', 'lightsteelblue'], markers = False, dashes = False).set(yticklabels = [])#, xticklabels = [])
+    #plt.ylim(5, 8)
 
     plotFigure.set_figwidth(10)
     plotFile = BytesIO()   

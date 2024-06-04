@@ -10,12 +10,20 @@
 <div class="main">
 <h2>Übersicht vergangener Monate</h2>
 
-{% for plot, month, average, red, orange, yellow, green, lightgreen, sharePlot in plots %}
+{% for plot, month, total, average, red, orange, yellow, green, lightgreen, sharePlot in plots %}
 <h3><u>{{ month }}</u></h3>
 <p><b>Verlauf:</b></p>
 <p><img src="data:image/png;base64,{{ plot }}"/></p>
 
 <table>
+    <tr>
+        <td>
+            Gesamtverbrauch
+        </td>
+        <td>
+            {{ total }} kWh
+        </td>
+    </tr>
     <tr>
         <td>
             Durchschnittlicher Verbrauch

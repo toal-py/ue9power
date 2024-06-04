@@ -1,8 +1,7 @@
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link href="/static/style.css" rel="stylesheet" />
-
+<div class="result">
 <h3>Vergleich von {{ month1 }} {{ year1 }} und {{ month2 }} {{ year2 }}</h3>
-
-<p>
     <table style="background-color: rgb(204, 206, 209);">
         <tr>
             <th>
@@ -28,7 +27,7 @@
         </tr>
         <tr>
             <td>
-                Durchschnittsverbrauch
+                Durchschnitts&shy;verbrauch
             </td>
             <td {% if meanValue1 < meanValue2 %} style="color:#43b605;font-weight:900" {% elif meanValue1 == meanValue2 %}{% else %} style="color:#ff0000" {% endif %}>
                 {{ meanValue1 }} kWh/Tag
@@ -84,4 +83,4 @@
     </table>
     <h4>Trendverlauf <!--cumulative moving averages--></h4>
     <p><img src="data:image/png;base64,{{ plot }}"/></p>
-</p>
+</div>
