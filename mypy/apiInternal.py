@@ -1,13 +1,10 @@
 import json
-from datetime import datetime,date,timedelta
+from datetime import date,timedelta
 import calendar
-import dotenv
 import psycopg
 from psycopg import sql
 import os
 import re
-
-dotenv.read_dotenv('/var/www/python-project/ue9power/.env') 
     
 def apiCall(mode:str, dates:str = ((date.today()-timedelta(1)).strftime('%d.%m.%Y')), year = (date.today().year), expand:bool = False):
 

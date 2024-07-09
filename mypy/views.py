@@ -3,36 +3,38 @@
 from django.http import HttpResponse
 import json
 from django.shortcuts import render
-from django.views.decorators.csrf import ensure_csrf_cookie, csrf_exempt, csrf_protect
-from django.template.loader import render_to_string
-from datetime import date, timedelta
+from django.views.decorators.csrf import ensure_csrf_cookie
+from datetime import datetime, date, timedelta
 import calendar
 import dotenv
 import psycopg
 import pandas as pd
 import math
 import os
+from multiprocessing import Pool
 from django.views.decorators.cache import cache_page
 
 from mypy.apiInternal import apiCall
-from mypy.plotView import plotMonthlyOverview, plotMonthlyShare, getShareValues, plotComparison
+from mypy.plotView import plotMonthlyOverview, plotComparison
+from mypy.createDataForPlotPage import createDataForPlotPage
 
 def homeView(request):
     htmlString = "<h1>Hello World</h1><p><a href='/power'>Hier geht es zum letzten Stromverbrauch</a></p>" 
     return HttpResponse(htmlString)
 
 @cache_page(21600)
+@ensure_csrf_cookie
 def powerOverview (request):
     dotenv.read_dotenv('/var/www/python-project/ue9power/.env')
     #different connect info in .env because of render_to_string which results in multiple quotes (""host")
     conn = psycopg.connect(os.environ.get('POSTGRES_VIEWS'))
-    cur=conn.cursor()
+    cur = conn.cursor()
     cur.execute('SELECT date,power_consumption FROM daily_power ORDER BY id DESC LIMIT 1;')
-    d=cur.fetchone()
+    d = cur.fetchone()
     cur.execute('SELECT week,power_consumption FROM weekly_power ORDER BY id DESC LIMIT 1;')
-    w=cur.fetchone()
+    w = cur.fetchone()
     cur.execute('SELECT month_year,power_consumption FROM monthly_power ORDER BY id DESC LIMIT 1;')
-    m=cur.fetchone()
+    m = cur.fetchone()
     month = m[0] if (m) else 'Bisher kein Monat in der DB'
     mPower = m[1] if (m) else 'Bisher keine Daten in der DB'
     cur.execute('SELECT power_consumption FROM daily_power ORDER BY power_consumption DESC LIMIT 1;')
@@ -40,8 +42,21 @@ def powerOverview (request):
     cur.close()
     conn.close()
 
-    #extrapolation
-    cm = json.loads(apiCall(mode = 'm'))
+    #check for first of month. Extrapolation doesn't work on that day.
+    dayOfMonth = date.today().day
+
+    #current month data
+    cm = json.loads(apiCall(mode = 'm', dates = ((date.today()-timedelta(1)).strftime('%d.%m.%Y'))))
+
+    #plot
+    if dayOfMonth != 1:
+        shortFormatDays = {elem[0][-10:-8]:elem[1] for elem in cm['result'].items()}
+       
+        plot = plotMonthlyOverview(shortFormatDays, math.ceil(ceiling[0]))
+    else:
+        pass
+
+    
 
     def extrapolation(x):
         try:
@@ -71,20 +86,21 @@ def powerOverview (request):
 
     clm = 1 - (normMPower / float(ep))
 
-    #check for first of month. Extrapolation doesn't work on that day.
-    dayOfMonth = date.today().day
+    def getCurrentMeanValue():        
+        apiData = json.loads(apiCall(mode = 'm', dates = str(date.today().month), expand = True))
+        numberOfDays = len(apiData['result'])
 
-    #plot
-    if dayOfMonth != 1:
-        shortFormatDays = {elem[0][-10:-8]:elem[1] for elem in cm['result'].items()}
-        
-        plot = plotMonthlyOverview(shortFormatDays, math.ceil(ceiling[0]))
-    else:
-        pass
+        mean = 0.0
+        for day in apiData['result'].values():
+            mean += day
+
+        meanValue = mean / numberOfDays
+        return round(meanValue,2)
 
     #current month for title of visualization
 
     monthList = ['dummy', 'Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember']
+
 
     contextPower={
         'day':d[0],
@@ -94,106 +110,44 @@ def powerOverview (request):
         'month':month,
         'mPower':mPower,
         'extrapolationCurrentMonth':'{:.2f}'.format(ep),
+        'currentMeanValue': getCurrentMeanValue(),
         'compLastMonthPercent':round((abs(clm) * 100), 2),
         'compLastMonth':clm,
         'plot':plot if dayOfMonth != 1 else None,
+        #'last4Weeks': plotLast4Weeks(inputLast4Weeks),
         'dayOfMonth':dayOfMonth,
         'currentMonthName': monthList[date.today().month]
     }
-    return (HttpResponse(render_to_string('powerOverview.html', context=contextPower)))
+    return render(request, 'powerOverview.html', context = contextPower)
 
 @cache_page(82800)
 def plotPage (request):
-    dotenv.read_dotenv('/var/www/python-project/ue9power/.env')
     #different connect info in .env because of render_to_string which results in multiple quotes (""host")
     conn = psycopg.connect(os.environ.get('POSTGRES_VIEWS'))
     cur = conn.cursor()
 
     cur.execute('SELECT month_year FROM monthly_power;')
     range = cur.fetchall()
-
     cur.execute('SELECT power_consumption FROM daily_power ORDER BY power_consumption DESC LIMIT 1;')
     ceiling = cur.fetchone()
-
     cur.close()
     conn.close()
+    range = [(elem[0], ceiling[0]) for elem in range]
 
-    monthNames = ['dummy', 'Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember']
-    plotList = []
-    monthList = []
-    totalUsage= []
-    averageUsage = []
-    countRed = []
-    countOrange = []
-    countYellow = []
-    countGreen = []
-    countLightGreen = []
-    sharesList = []
+    p = Pool()
 
-    #elem in this case is a single month.
-    for elem in range:
-        singlePlot = json.loads(apiCall(mode = 'm', dates = elem[0][-6], expand = True))
+    result = p.starmap(createDataForPlotPage, range)
 
-        dom = calendar.monthrange(date.today().year, int(elem[0][-6]))[1]
-
-        shareValues = getShareValues(singlePlot, month = int(elem[0][-6]))
-        sharesList.append(plotMonthlyShare(shareValues))
-        #plot monthly overview
-        shortFormatDays = {elem[0][-10:-8] : elem[1] for elem in singlePlot['result']['days'].items()}
-        plotList.append(plotMonthlyOverview(shortFormatDays, math.ceil(ceiling[0])))
-
-        #titles for individual month
-        monthList.append(monthNames[int(elem[0][-6])])
-
-        #total usage per month
-
-        totalUsage.append(singlePlot['result']['month']['power_consumption'])
-
-        #average usage per month
-        avg = 0.0
-        for day in singlePlot['result']['days'].values():
-            avg += day
+    p.close()
         
-        avgM = avg / dom
-        
-        averageUsage.append(round(avgM,2))
-
-        #number of 'colored' days
-        cr = 0
-        co = 0
-        cy = 0
-        cg = 0
-        clg = 0
-        for elm in singlePlot['result']['days'].values():
-            if elm >= 10.0:
-                cr += 1
-            elif elm < 10.0 and elm >= 8.0:
-                co += 1
-            elif elm < 8.0 and elm >= 6.0:
-                cy += 1
-            elif elm < 6.0 and elm >= 4.0:
-                cg += 1
-            else:
-                clg += 1
-        
-        countRed.append(cr)
-        countOrange.append(co)
-        countYellow.append(cy)
-        countGreen.append(cg)
-        countLightGreen.append(clg)
-        
-    #one list for all variables of the template
-    completeList = zip(plotList, monthList,totalUsage, averageUsage, countRed, countOrange, countYellow, countGreen, countLightGreen, sharesList)
-
     context = {
-        'plots': completeList
+        'plots': result
     }
-    return (HttpResponse(render_to_string('plotPage.html', context=context)))
+    return render(request, 'plotPage.html', context = context)
 
 @ensure_csrf_cookie
 def comparisonPage (request):
-    #get list of months from database
-    dotenv.read_dotenv('/var/www/python-project/ue9power/.env')
+    #dotenv.read_dotenv('/var/www/python-project/ue9power/.env')
     #different connect info in .env because of render_to_string which results in multiple quotes (""host")
     conn = psycopg.connect(os.environ.get('POSTGRES_VIEWS'))
     cur = conn.cursor()
@@ -242,15 +196,15 @@ def comparisonAPI (request):
     postData = json.loads(json.loads((request.body).decode('utf-8')))
     mappingMonths = {'Januar': 1, 'Februar': 2, 'März': 3, 'April': 4, 'Mai': 5, 'Juni': 6, 'Juli': 7, 'August': 8, 'September': 9, 'Oktober': 10, 'November': 11, 'Dezember': 12}
 
-    def getTotalConsumption(month):
-        apiData = json.loads(apiCall(mode = 'm', dates = str(mappingMonths[month])))
+    def getTotalConsumption(month, year):
+        apiData = json.loads(apiCall(mode = 'm', dates = str(mappingMonths[month]), year = year))
 
         return apiData['result']['power_consumption']
 
     #expects month in this format: 'Februar'.
-    def getMeanValue(month):
-        numberOfDays = calendar.monthrange(date.today().year, mappingMonths[month])[1]
-        apiData = json.loads(apiCall(mode = 'm', dates = str(mappingMonths[month]), expand = True))
+    def getMeanValue(month, year):
+        numberOfDays = calendar.monthrange(int(year), mappingMonths[month])[1]
+        apiData = json.loads(apiCall(mode = 'm', dates = str(mappingMonths[month]), year = year, expand = True))
         
         mean = 0.0
         for day in apiData['result']['days'].values():
@@ -259,9 +213,9 @@ def comparisonAPI (request):
         meanValue = mean / numberOfDays
         return round(meanValue,2)
 
-    def getAboveAndBelowAverage(month):
-        apiData = json.loads(apiCall(mode = 'm', dates = str(mappingMonths[month]), expand = True))
-        numberOfDays = calendar.monthrange(date.today().year, mappingMonths[month])[1]
+    def getAboveAndBelowAverage(month, year):
+        apiData = json.loads(apiCall(mode = 'm', dates = str(mappingMonths[month]), year = year, expand = True))
+        numberOfDays = calendar.monthrange(int(year), mappingMonths[month])[1]
 
         countAbove = 0
         countBelow = 0
@@ -276,8 +230,8 @@ def comparisonAPI (request):
 
         return shareAbove, shareBelow
     
-    def getHighestAndLowestConsumptionDays(month):
-        apiData = json.loads(apiCall(mode = 'm', dates = str(mappingMonths[month]), expand = True))
+    def getHighestAndLowestConsumptionDays(month, year):
+        apiData = json.loads(apiCall(mode = 'm', dates = str(mappingMonths[month]), year = year, expand = True))
 
         highestConsumptionValue = max(apiData['result']['days'].values())
         highestConsumptionDay = list(apiData['result']['days'].keys())[list(apiData['result']['days'].values()).index(highestConsumptionValue)]
@@ -287,8 +241,8 @@ def comparisonAPI (request):
 
         return highestConsumptionValue, highestConsumptionDay, lowestConsumptionValue, lowestConsumptionDay
 
-    def getCumulativeMovingAverage(month):
-        apiData = json.loads(apiCall(mode = 'm', dates = str(mappingMonths[month]), expand = True))
+    def getCumulativeMovingAverage(month, year):
+        apiData = json.loads(apiCall(mode = 'm', dates = str(mappingMonths[month]), year = year, expand = True))
         rawData = list(apiData['result']['days'].values())
         number_series = pd.Series(rawData)
         windows = number_series.expanding(7)
@@ -296,10 +250,10 @@ def comparisonAPI (request):
 
         return moving_averages.round(2).tolist()
     
-    def buildPlotDataSet(combinedPlotList, month1, month2):
+    def buildPlotDataSet(combinedPlotList, month1, month2, year1, year2):
         monthList = []
-        monthList.append(month1)
-        monthList.append(month2)
+        monthList.append(month1 + ' ' + year1)
+        monthList.append(month2 + ' ' + year2)
         dataSet = {}
         i = 0
         for elem in combinedPlotList:
@@ -311,31 +265,56 @@ def comparisonAPI (request):
 
     combinedPlotList = [] 
     
-    combinedPlotList.append(getCumulativeMovingAverage(postData['month1']))
-    combinedPlotList.append(getCumulativeMovingAverage(postData['month2']))
+    combinedPlotList.append(getCumulativeMovingAverage(postData['month1'], postData['year1']))
+    combinedPlotList.append(getCumulativeMovingAverage(postData['month2'], postData['year2']))
 
     context = {'month1': postData['month1'],
                'year1': postData['year1'],
                'month2': postData['month2'],
                'year2': postData['year2'],
-               'totalConsumption1': getTotalConsumption(postData['month1']),
-               'totalConsumption2': getTotalConsumption(postData['month2']),
-               'meanValue1': getMeanValue(postData['month1']),
-               'meanValue2': getMeanValue(postData['month2']),
-               'shareAboveAverageMonth1': getAboveAndBelowAverage(postData['month1'])[0],
-               'shareAboveAverageMonth2': getAboveAndBelowAverage(postData['month2'])[0],
-               'shareBelowAverageMonth1': getAboveAndBelowAverage(postData['month1'])[1],
-               'shareBelowAverageMonth2': getAboveAndBelowAverage(postData['month2'])[1],
-               'testday1': getHighestAndLowestConsumptionDays(postData['month1']),
-               'testday2': getHighestAndLowestConsumptionDays(postData['month2']),
-               'plot': plotComparison(buildPlotDataSet(combinedPlotList, postData['month1'], postData['month2'])),
-               'highestConsumptionValue1': getHighestAndLowestConsumptionDays(postData['month1'])[0],
-               'highestConsumptionDay1': getHighestAndLowestConsumptionDays(postData['month1'])[1],
-               'lowestConsumptionValue1': getHighestAndLowestConsumptionDays(postData['month1'])[2],
-               'lowestConsumptionDay1': getHighestAndLowestConsumptionDays(postData['month1'])[3],
-               'highestConsumptionValue2': getHighestAndLowestConsumptionDays(postData['month2'])[0],
-               'highestConsumptionDay2': getHighestAndLowestConsumptionDays(postData['month2'])[1],
-               'lowestConsumptionValue2': getHighestAndLowestConsumptionDays(postData['month2'])[2],
-               'lowestConsumptionDay2': getHighestAndLowestConsumptionDays(postData['month2'])[3]
+               'totalConsumption1': getTotalConsumption(postData['month1'], postData['year1']),
+               'totalConsumption2': getTotalConsumption(postData['month2'], postData['year2']),
+               'meanValue1': getMeanValue(postData['month1'], postData['year1']),
+               'meanValue2': getMeanValue(postData['month2'], postData['year2']),
+               'shareAboveAverageMonth1': getAboveAndBelowAverage(postData['month1'], postData['year1'])[0],
+               'shareAboveAverageMonth2': getAboveAndBelowAverage(postData['month2'], postData['year2'])[0],
+               'shareBelowAverageMonth1': getAboveAndBelowAverage(postData['month1'], postData['year1'])[1],
+               'shareBelowAverageMonth2': getAboveAndBelowAverage(postData['month2'], postData['year2'])[1],
+               'testday1': getHighestAndLowestConsumptionDays(postData['month1'], postData['year1']),
+               'testday2': getHighestAndLowestConsumptionDays(postData['month2'], postData['year2']),
+               'plot': plotComparison(buildPlotDataSet(combinedPlotList, postData['month1'], postData['month2'], postData['year1'], postData['year2'])),
+               'highestConsumptionValue1': getHighestAndLowestConsumptionDays(postData['month1'], postData['year1'])[0],
+               'highestConsumptionDay1': getHighestAndLowestConsumptionDays(postData['month1'], postData['year1'])[1],
+               'lowestConsumptionValue1': getHighestAndLowestConsumptionDays(postData['month1'], postData['year1'])[2],
+               'lowestConsumptionDay1': getHighestAndLowestConsumptionDays(postData['month1'], postData['year1'])[3],
+               'highestConsumptionValue2': getHighestAndLowestConsumptionDays(postData['month2'], postData['year2'])[0],
+               'highestConsumptionDay2': getHighestAndLowestConsumptionDays(postData['month2'], postData['year2'])[1],
+               'lowestConsumptionValue2': getHighestAndLowestConsumptionDays(postData['month2'], postData['year2'])[2],
+               'lowestConsumptionDay2': getHighestAndLowestConsumptionDays(postData['month2'], postData['year2'])[3]
             }
     return render(request, 'monthComparisonResult.html', context=context)
+
+def currentDayAPI(request):
+    postData = json.loads(json.loads((request.body).decode('utf-8')))
+    
+    def getUsageUpToNow(timestamp):
+
+        todayTS = ((datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)).timestamp() * 1000)
+        conn = psycopg.connect(os.environ.get('POSTGRES_VIEWS'))
+        cur = conn.cursor()
+        cur.execute(f'SELECT val FROM ts_string WHERE ts BETWEEN {(int(timestamp) - 300000)} AND {(int(timestamp) + 30000)} ORDER BY ABS(ts - {int(timestamp)}) ASC;')
+        resultNow = cur.fetchone()
+        cur.execute(f'SELECT val FROM ts_string WHERE ts BETWEEN {(todayTS - 300000)} AND {(todayTS + 30000)} ORDER BY ABS(ts - {todayTS}) ASC;')
+        resultStartOfDay = cur.fetchone()
+        cur.close()
+        conn.close()
+
+        dataNow = json.loads(resultNow[0])
+        dataStartOfDay = json.loads(resultStartOfDay[0])
+
+        usageUpToNow = dataNow['Haus']['total_in'] - dataStartOfDay['Haus']['total_in']
+        
+        return round(usageUpToNow, 2)
+
+    context = {'currentDayUsage': getUsageUpToNow(postData['currentTimestamp'])}
+    return render(request, 'currentDayUsageResult.html', context = context)

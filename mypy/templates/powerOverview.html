@@ -1,6 +1,52 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link href="/static/style.css" rel="stylesheet" />
 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script type="text/javascript">
+
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+function getCurrentUsage (){
+
+  var timestamp = Date.now()  
+  var csrftoken = getCookie('csrftoken');
+  var url = "/power/api/current";
+
+
+  var compData = `{"currentTimestamp": "${timestamp}"}`;
+
+  $.ajax({
+    url: url,
+    method: "POST",
+    headers: {'X-CSRFToken': csrftoken},
+    content_type: 'application/json',
+    data: JSON.stringify(compData),
+    error: function(xhr, status, error) {
+      console.error("Error:", error);
+    },
+    success: function(response) {
+      console.log(response);
+      document.getElementById("result").innerHTML = response;
+    }
+  }
+  );
+};
+</script>
+
 <div class="navbar">
     <a href="/power">Übersicht aktueller Monat</a>
     <a href="/power/plots">Übersicht vergangene Monate</a>
@@ -16,9 +62,12 @@
 {% if dayOfMonth > 1 %}
     <u>Hochrechnung für den laufenden Monat</u>: {{ extrapolationCurrentMonth }} kWh bei weiterhin ähnlichem Verbrauch ({{ compLastMonthPercent }} %*{% if compLastMonth < 0 %} weniger{% else %} mehr{% endif %} als letzten Monat).
     </p>
+    <p><small>*normalisiert an die Anzahl der Tage des Vormonats.</small></p>
+    <p>
+    <u>Aktueller Durchschnittsverbrauch</u>: {{ currentMeanValue }} kWh/Tag
+    </p>
 
 </p>
-<p><small>*normalisiert an die Anzahl der Tage des Vormonats.</small></p>
 {% if dayOfMonth > 1 and dayOfMonth < 6 %}
 <p><b>Bitte beachten:</b> In den ersten Tagen des Monats kann die Hochrechnung unpräzise sein. Nach ein paar Tagen wird sie an Relevanz gewinnen.</p>
 {% endif %}
@@ -26,6 +75,12 @@
 {% else %}
 <p>Hochrechnung für laufenden Monat noch nicht möglich, da noch keine Daten zur Verfügung stehen. Ab morgen werden Daten zur Verfügung stehen.</p>
 {% endif %}
+
+<p>      
+    <button onclick = getCurrentUsage()>Wie hoch ist der Verbrauch bis hierhin?</button>
+    <br>
+    <div id="result"></div>
+</p>
 
 <p><h2>Verlauf im {{ currentMonthName }}</h2></p>
 
@@ -36,4 +91,8 @@
 <p>Visualisierung für laufenden Monat noch nicht möglich, da noch keine Daten zur Verfügung stehen. Ab morgen werden Daten zur Verfügung stehen.</p>
 
 {% endif %}
+<!--
+<p><h2>Übersicht über die letzten vier Wochen</h2></p>
+<p><img src="data:image/png;base64,{{ last4Weeks }}"/></p>
+-->
 </div>
