@@ -120,7 +120,7 @@ def powerOverview (request):
     }
     return render(request, 'powerOverview.html', context = contextPower)
 
-#@cache_page(82800)
+@cache_page(82800)
 def plotPage (request):
     #different connect info in .env because of render_to_string which results in multiple quotes (""host")
     conn = psycopg.connect(os.environ.get('POSTGRES_VIEWS'))
