@@ -88,29 +88,52 @@ def plotMonthlyShare(data):
     return encodedFile.decode('utf-8')
 
 #get share of green, orange or red days. Input is the result of an API call like this: data = json.loads(apiCall(mode='m', dates='2', expand=True))
-def getShareValues(data, month, year):
+def getShareValues(data, month = None, year = None, fullMonth = True, altLength = None):
     countRed = []
     countOrange = []
     countYellow = []
     countGreen = []
     countLightGreen = []
-    for elem in data['result']['days'].values():
-        if elem >= 10.0:
-            countRed.append(elem)
-        elif elem < 10.0 and elem >= 8.0:
-            countOrange.append(elem)
-        elif elem < 8.0 and elem >= 6.0:
-            countYellow.append(elem)
-        elif elem < 6.0 and elem >= 4.0:
-            countGreen.append(elem)
-        else:
-            countLightGreen.append(elem)
-    daysOfMonth = calendar.monthrange(year, month)[1]
-    shares = {'lightGreen': round(((len(countLightGreen) / daysOfMonth) * 100), 2), 
-              'green': round(((len(countGreen) / daysOfMonth) * 100), 2), 
-              'yellow': round(((len(countYellow) / daysOfMonth) * 100), 2), 
-              'orange': round(((len(countOrange) / daysOfMonth) * 100), 2), 
-              'red': round(((len(countRed) / daysOfMonth) * 100), 2)}
+        
+    if fullMonth:
+
+        for elem in data['result']['days'].values():
+            if elem >= 10.0:
+                countRed.append(elem)
+            elif elem < 10.0 and elem >= 8.0:
+                countOrange.append(elem)
+            elif elem < 8.0 and elem >= 6.0:
+                countYellow.append(elem)
+            elif elem < 6.0 and elem >= 4.0:
+                countGreen.append(elem)
+            else:
+                countLightGreen.append(elem)
+        
+        daysOfMonth = calendar.monthrange(year, month)[1]
+        shares = {'lightGreen': round(((len(countLightGreen) / daysOfMonth) * 100), 2), 
+                'green': round(((len(countGreen) / daysOfMonth) * 100), 2), 
+                'yellow': round(((len(countYellow) / daysOfMonth) * 100), 2), 
+                'orange': round(((len(countOrange) / daysOfMonth) * 100), 2), 
+                'red': round(((len(countRed) / daysOfMonth) * 100), 2)}
+    else:
+        for elem in data.values():
+            if elem >= 10.0:
+                countRed.append(elem)
+            elif elem < 10.0 and elem >= 8.0:
+                countOrange.append(elem)
+            elif elem < 8.0 and elem >= 6.0:
+                countYellow.append(elem)
+            elif elem < 6.0 and elem >= 4.0:
+                countGreen.append(elem)
+            else:
+                countLightGreen.append(elem)
+        
+        shares = {'lightGreen': round(((len(countLightGreen) / altLength) * 100), 2), 
+                'green': round(((len(countGreen) / altLength) * 100), 2), 
+                'yellow': round(((len(countYellow) / altLength) * 100), 2), 
+                'orange': round(((len(countOrange) / altLength) * 100), 2), 
+                'red': round(((len(countRed) / altLength) * 100), 2)}
+    
     return shares
     
 def plotComparison(data):

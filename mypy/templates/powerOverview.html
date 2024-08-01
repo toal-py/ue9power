@@ -86,13 +86,9 @@ function getCurrentUsage (){
 
 {% if dayOfMonth > 1  %}
 <p><img src="data:image/png;base64,{{ plot }}"/></p>
-
+<p><img src="data:image/png;base64,{{ sharePlot }}"/></p>
 {% else %}
 <p>Visualisierung für laufenden Monat noch nicht möglich, da noch keine Daten zur Verfügung stehen. Ab morgen werden Daten zur Verfügung stehen.</p>
 
 {% endif %}
-<!--
-<p><h2>Übersicht über die letzten vier Wochen</h2></p>
-<p><img src="data:image/png;base64,{{ last4Weeks }}"/></p>
--->
 </div>

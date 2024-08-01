@@ -7,7 +7,7 @@ def createDataForPlotPage(elem, ceiling):
     monthNames = ['dummy', 'Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember']
     singlePlot = json.loads(apiCall(mode = 'm', dates = elem[0:2], year = elem[3:], expand = True))
     dom = calendar.monthrange(int(elem[3:]), int(elem[0:2]))[1]
-    shareValues = getShareValues(singlePlot, month = int(elem[0:2]), year = int(elem[3:]))
+    shareValues = getShareValues(data = singlePlot, month = int(elem[0:2]), year = int(elem[3:]))
     sharesList = plotMonthlyShare(shareValues)
     #plot monthly overview
     shortFormatDays = {elem[0][-10:-8] : elem[1] for elem in singlePlot['result']['days'].items()}

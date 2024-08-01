@@ -1,5 +1,27 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link href="/static/style.css" rel="stylesheet" />
+<button onclick = topFunction() id="myBtn" title="Go to top">Top</button>
+<script type="text/javascript">
+    // Get the button:
+let mybutton = document.getElementById("myBtn");
+
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 50 || document.documentElement.scrollTop > 50) {
+    mybutton.style.display = "block";
+  } else {
+    mybutton.style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0; // For Safari
+  document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+}
+</script>
 
 <div class="navbar">
     <a href="/power">Übersicht aktueller Monat</a>
@@ -9,8 +31,14 @@
 
 <div class="main">
 <h2>Übersicht vergangener Monate</h2>
-
+<ul style="list-style-type: none; background-color: #61868d;">
 {% for plot, month, total, average, sharePlot in plots %}
+<li style="color: white;"><a href="#{{ month }}">{{ month }}</a></li>
+{% endfor %}
+</ul>
+{% for plot, month, total, average, sharePlot in plots %}
+<div id="{{ month }}"></div>
+<br>
 <h3><u>{{ month }}</u></h3>
 <p><b>Verlauf:</b></p>
 <p><img src="data:image/png;base64,{{ plot }}"/></p>
@@ -42,3 +70,4 @@
 {% endfor %}
 
 </div>
+

@@ -8,6 +8,7 @@ from datetime import datetime, date, timedelta
 import calendar
 import dotenv
 import psycopg
+from psycopg import sql
 import pandas as pd
 import math
 import os
@@ -15,14 +16,14 @@ from multiprocessing import Pool
 from django.views.decorators.cache import cache_page
 
 from mypy.apiInternal import apiCall
-from mypy.plotView import plotMonthlyOverview, plotComparison
+from mypy.plotView import plotMonthlyOverview, plotComparison, getShareValues, plotMonthlyShare
 from mypy.createDataForPlotPage import createDataForPlotPage
 
 def homeView(request):
     htmlString = "<h1>Hello World</h1><p><a href='/power'>Hier geht es zum letzten Stromverbrauch</a></p>" 
     return HttpResponse(htmlString)
 
-@cache_page(21600)
+#@cache_page(21600)
 @ensure_csrf_cookie
 def powerOverview (request):
     dotenv.read_dotenv('/var/www/python-project/ue9power/.env')
@@ -53,6 +54,10 @@ def powerOverview (request):
         shortFormatDays = {elem[0][-10:-8]:elem[1] for elem in cm['result'].items()}
        
         plot = plotMonthlyOverview(shortFormatDays, math.ceil(ceiling[0]))
+
+        shareValues = getShareValues(data = cm['result'], fullMonth = False, altLength = len(cm['result']))
+
+        sharePlot = plotMonthlyShare(shareValues)
     else:
         pass
 
@@ -110,17 +115,17 @@ def powerOverview (request):
         'month':month,
         'mPower':mPower,
         'extrapolationCurrentMonth':'{:.2f}'.format(ep),
-        'currentMeanValue': getCurrentMeanValue(),
+        'currentMeanValue': getCurrentMeanValue() if dayOfMonth != 1 else None,
         'compLastMonthPercent':round((abs(clm) * 100), 2),
         'compLastMonth':clm,
         'plot':plot if dayOfMonth != 1 else None,
-        #'last4Weeks': plotLast4Weeks(inputLast4Weeks),
+        'sharePlot': sharePlot if dayOfMonth != 1 else None,
         'dayOfMonth':dayOfMonth,
         'currentMonthName': monthList[date.today().month]
     }
     return render(request, 'powerOverview.html', context = contextPower)
 
-@cache_page(82800)
+#@cache_page(82800)
 def plotPage (request):
     #different connect info in .env because of render_to_string which results in multiple quotes (""host")
     conn = psycopg.connect(os.environ.get('POSTGRES_VIEWS'))
@@ -302,13 +307,14 @@ def currentDayAPI(request):
         todayTS = ((datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)).timestamp() * 1000)
         conn = psycopg.connect(os.environ.get('POSTGRES_VIEWS'))
         cur = conn.cursor()
-        cur.execute(f'SELECT val FROM ts_string WHERE ts BETWEEN {(int(timestamp) - 300000)} AND {(int(timestamp) + 30000)} ORDER BY ABS(ts - {int(timestamp)}) ASC;')
+        #cur.execute(f'SELECT val FROM ts_string WHERE ts BETWEEN {(int(timestamp) - 300000)} AND {(int(timestamp) + 30000)} ORDER BY ABS(ts - {int(timestamp)}) ASC;')
+        cur.execute(sql.SQL('SELECT val FROM ts_string WHERE ts BETWEEN ({timestamp} - 300000) AND ({timestamp} + 30000) ORDER BY ABS(ts - {timestamp}) ASC;').format(timestamp=sql.Literal(int(timestamp))))
         resultNow = cur.fetchone()
         cur.execute(f'SELECT val FROM ts_string WHERE ts BETWEEN {(todayTS - 300000)} AND {(todayTS + 30000)} ORDER BY ABS(ts - {todayTS}) ASC;')
         resultStartOfDay = cur.fetchone()
         cur.close()
         conn.close()
-
+        
         dataNow = json.loads(resultNow[0])
         dataStartOfDay = json.loads(resultStartOfDay[0])
 
