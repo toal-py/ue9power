@@ -23,7 +23,7 @@ def homeView(request):
     htmlString = "<h1>Hello World</h1><p><a href='/power'>Hier geht es zum letzten Stromverbrauch</a></p>" 
     return HttpResponse(htmlString)
 
-#@cache_page(21600)
+@cache_page(21600)
 @ensure_csrf_cookie
 def powerOverview (request):
     dotenv.read_dotenv('/var/www/python-project/ue9power/.env')
@@ -125,7 +125,7 @@ def powerOverview (request):
     }
     return render(request, 'powerOverview.html', context = contextPower)
 
-#@cache_page(82800)
+@cache_page(82800)
 def plotPage (request):
     #different connect info in .env because of render_to_string which results in multiple quotes (""host")
     conn = psycopg.connect(os.environ.get('POSTGRES_VIEWS'))

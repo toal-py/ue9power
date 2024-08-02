@@ -1,6 +1,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link href="/static/style.css" rel="stylesheet" />
-<button onclick = topFunction() id="myBtn" title="Go to top">Top</button>
+<!--<button onclick = topFunction() id="myBtn" title="Go to top">Top</button>
 <script type="text/javascript">
     // Get the button:
 let mybutton = document.getElementById("myBtn");
@@ -21,7 +21,7 @@ function topFunction() {
   document.body.scrollTop = 0; // For Safari
   document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
 }
-</script>
+</script>-->
 
 <div class="navbar">
     <a href="/power">Übersicht aktueller Monat</a>
@@ -31,11 +31,6 @@ function topFunction() {
 
 <div class="main">
 <h2>Übersicht vergangener Monate</h2>
-<ul style="list-style-type: none; background-color: #61868d;">
-{% for plot, month, total, average, sharePlot in plots %}
-<li style="color: white;"><a href="#{{ month }}">{{ month }}</a></li>
-{% endfor %}
-</ul>
 {% for plot, month, total, average, sharePlot in plots %}
 <div id="{{ month }}"></div>
 <br>
