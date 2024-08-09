@@ -10,7 +10,7 @@ gunicorn==22.0.0
 hiredis==2.3.2
 idna==3.7
 kiwisolver==1.4.5
-matplotlib==3.9.1
+matplotlib==3.9.0
 numpy==2.0
 packaging==23.2
 pandas==2.2.2
