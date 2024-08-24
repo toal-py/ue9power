@@ -21,7 +21,8 @@ def checkTimestampValidity (databaseResultList):
         print (dictElem['Time'])
         datetimeObject = datetime.strptime(dictElem['Time'], '%Y-%m-%dT%H:%M:%S')
         print (datetimeObject)
-        print (datetime.now() - datetimeObject)
+        print ((datetime.now()).day)
+        print (((datetime.now()).day - datetimeObject.day) > 1)
 
 #today's 0:00h and yesterday's 0:00h
 todayTS = (datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)).timestamp()
