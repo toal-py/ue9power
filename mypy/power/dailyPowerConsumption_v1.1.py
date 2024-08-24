@@ -26,7 +26,7 @@ cur = conn.cursor()
 todayTS = (datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)).timestamp()
 yesterdayTS = ((datetime.now()-timedelta(1)).replace(hour=0, minute=0, second=0, microsecond=0)).timestamp()
 
-#execute query to fetch the string with needed values. Limit to 6 results with timestamp range.
+#execute query to fetch the string with needed values.
 cur.execute(f'SELECT ts,val FROM ts_string WHERE ts BETWEEN {((int(yesterdayTS))-300)*1000} AND {((int(todayTS))+300)*1000};')
 
 allLines = cur.fetchall()
