@@ -36,9 +36,9 @@ print (f'Today\'s timestamp: {todayTS}\n')
 print (f'Yesterday\'s timestamp: {yesterdayTS}\n')
 
 #execute query to fetch the string with needed values. Limit to 6 results with timestamp range.
-cur.execute(f'(SELECT ts,val FROM ts_string WHERE ts BETWEEN {((int(yesterdayTS))-300)*1000} AND {((int(todayTS))+300)*1000} ORDER BY ts ASC LIMIT 3) UNION (SELECT ts,val FROM ts_string WHERE ts BETWEEN {((int(yesterdayTS))-300)*1000} AND {((int(todayTS))+300)*1000} ORDER BY ts DESC LIMIT 3);')
+cur.execute(f'(SELECT ts,val FROM ts_string WHERE ts BETWEEN {((int(yesterdayTS))-360)*1000} AND {((int(todayTS))+360)*1000} ORDER BY ts ASC LIMIT 6) UNION (SELECT ts,val FROM ts_string WHERE ts BETWEEN {((int(yesterdayTS))-360)*1000} AND {((int(todayTS))+360)*1000} ORDER BY ts DESC LIMIT 6);')
 
-print (f'SELECT query: (SELECT ts,val FROM ts_string WHERE ts BETWEEN {((int(yesterdayTS))-300)*1000} AND {((int(todayTS))+300)*1000} ORDER BY ts ASC LIMIT 3) UNION (SELECT ts,val FROM ts_string WHERE ts BETWEEN {((int(yesterdayTS))-300)*1000} AND {((int(todayTS))+300)*1000} ORDER BY ts DESC LIMIT 3);\n')
+print (f'SELECT query: (SELECT ts,val FROM ts_string WHERE ts BETWEEN {((int(yesterdayTS))-360)*1000} AND {((int(todayTS))+360)*1000} ORDER BY ts ASC LIMIT 6) UNION (SELECT ts,val FROM ts_string WHERE ts BETWEEN {((int(yesterdayTS))-360)*1000} AND {((int(todayTS))+360)*1000} ORDER BY ts DESC LIMIT 6);\n')
 
 allLines = cur.fetchall()
 
