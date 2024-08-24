@@ -33,7 +33,7 @@ todayTS = (datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)).ti
 yesterdayTS = ((datetime.now()-timedelta(1)).replace(hour=0, minute=0, second=0, microsecond=0)).timestamp()
 
 print (f'Today\'s timestamp: {todayTS}\n')
-print (f'Yesterday\'s timestamp: {yesterdayTS}\n')
+print (f'Yesterday\'s timestamp: {yesterdayTS - 360}\n')
 
 #execute query to fetch the string with needed values. Limit to 6 results with timestamp range.
 cur.execute(f'(SELECT ts,val FROM ts_string WHERE ts BETWEEN {((int(yesterdayTS)) - 360)*1000} AND {((int(todayTS))+360)*1000} ORDER BY ts ASC LIMIT 6) UNION (SELECT ts,val FROM ts_string WHERE ts BETWEEN {((int(yesterdayTS)) - 360)*1000} AND {((int(todayTS))+360)*1000} ORDER BY ts DESC LIMIT 6);')
