@@ -39,7 +39,7 @@ print (f'Result from database: {allLines}\n')
 
 
 
-print (f'Result of cleaned list: {checkTimestampValidity(allLines)}')
+checkTimestampValidity(allLines)
 
 print ()
 
