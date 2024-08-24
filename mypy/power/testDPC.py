@@ -18,6 +18,10 @@ def checkTimestampValidity (databaseResultList):
         print (type(elem['val']))
         dictElem = json.loads(elem['val'])
         print (type(dictElem))
+        print (dictElem['Time'])
+        datetimeObject = datetime.strptime(dictElem['Time'])
+        print (datetimeObject)
+        print (datetime.now() - datetimeObject)
 
 #today's 0:00h and yesterday's 0:00h
 todayTS = (datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)).timestamp()
