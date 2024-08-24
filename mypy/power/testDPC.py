@@ -14,7 +14,7 @@ cur = conn.cursor()
 
 def checkTimestampValidity (databaseResultList):
     for elem in databaseResultList:
-        print (elem['val'])
+        print (elem['val']['Time'])
 
 #today's 0:00h and yesterday's 0:00h
 todayTS = (datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)).timestamp()
