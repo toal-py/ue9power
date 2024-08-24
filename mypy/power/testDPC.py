@@ -16,7 +16,6 @@ def checkTimestampValidity (databaseResultList):
     for elem in json.loads(databaseResultList['val']):
         print (elem)
 
-
 #today's 0:00h and yesterday's 0:00h
 todayTS = (datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)).timestamp()
 yesterdayTS = ((datetime.now()-timedelta(1)).replace(hour=0, minute=0, second=0, microsecond=0)).timestamp()
@@ -32,6 +31,10 @@ print (f'SELECT query: (SELECT ts,val FROM ts_string WHERE ts BETWEEN {((int(yes
 allLines = cur.fetchall()
 
 print (f'Result from database: {allLines}\n')
+
+checkTimestampValidity(allLines)
+
+print ()
 
 #create list of combination: timestamp + total_in.value
 dataSetList = []
