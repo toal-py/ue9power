@@ -16,15 +16,15 @@ cur = conn.cursor()
 todayTS = (datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)).timestamp()
 yesterdayTS = ((datetime.now()-timedelta(1)).replace(hour=0, minute=0, second=0, microsecond=0)).timestamp()
 
-print (f'Today\'s timestamp: {todayTS}')
-print (f'Yesterday\'s timestamp: {yesterdayTS}')
+print (f'Today\'s timestamp: {todayTS}\n')
+print (f'Yesterday\'s timestamp: {yesterdayTS}\n')
 
 #execute query to fetch the string with needed values. Limit to 6 results with timestamp range.
 cur.execute(f'(SELECT ts,val FROM ts_string WHERE ts BETWEEN {((int(yesterdayTS))-300)*1000} AND {((int(todayTS))+300)*1000} ORDER BY ts ASC LIMIT 3) UNION (SELECT ts,val FROM ts_string WHERE ts BETWEEN {((int(yesterdayTS))-300)*1000} AND {((int(todayTS))+300)*1000} ORDER BY ts DESC LIMIT 3);')
 
 allLines = cur.fetchall()
 
-print (f'Result from database: {allLines}')
+print (f'Result from database: {allLines}\n')
 
 #create list of combination: timestamp + total_in.value
 dataSetList = []
@@ -34,7 +34,7 @@ for elem in allLines:
     listTsVal = [(elem['ts']/1000.0), elemDict['Haus']['total_in'], elem['val']]
     dataSetList.append(listTsVal)
 
-print (f'List of datasets: {dataSetList}')
+print (f'List of datasets: {dataSetList}\n')
     
 #create list of only timestamps to use in following min() function.
 timestampList = []
@@ -43,7 +43,7 @@ for elem in allLines:
     listTs = (elem['ts']/1000.0)
     timestampList.append(listTs)
 
-print (f'List of timestamps: {timestampList}')
+print (f'List of timestamps: {timestampList}\n')
 
 #find closest timestamp via function
 def getClosestTimestamp (list,ts):
@@ -54,8 +54,8 @@ def getClosestTimestamp (list,ts):
 resClosestTimestampTD = getClosestTimestamp(timestampList,todayTS)
 resClosestTimestampYD = getClosestTimestamp(timestampList,yesterdayTS)
 
-print (f'Closest timestamp to today\'s 0:00h: {resClosestTimestampTD}')
-print (f'Closest timestamp to yesterday\'s 0:00h: {resClosestTimestampYD}')
+print (f'Closest timestamp to today\'s 0:00h: {resClosestTimestampTD}\n')
+print (f'Closest timestamp to yesterday\'s 0:00h: {resClosestTimestampYD}\n')
 
 #find corresponding data set to closest timestamp. True for total_in, False for original value.
 def getClosestDataSet (set,cts,orig):
@@ -71,13 +71,13 @@ def getClosestDataSet (set,cts,orig):
 resClosestDatasetTD = getClosestDataSet(dataSetList,resClosestTimestampTD,True)
 resClosestDatasetYD = getClosestDataSet(dataSetList,resClosestTimestampYD,True)
 
-print (f'Closest dataset to today\'s 0:00h timestamp: {resClosestDatasetTD}')
-print (f'Closest dataset to today\'s 0:00h timestamp: {resClosestDatasetYD}')
+print (f'Closest dataset to today\'s 0:00h timestamp: {resClosestDatasetTD}\n')
+print (f'Closest dataset to today\'s 0:00h timestamp: {resClosestDatasetYD}\n')
 
 #date corresponding to the daily power consumption, formatted to dd.mm.YYYY
 refYesterday = (date.today()-timedelta(1)).strftime('%d.%m.%Y')
 
-print (f'Reference date: {refYesterday}')
+print (f'Reference date: {refYesterday}\n')
 
 print (f'SQL query: INSERT INTO daily_power (date, power_consumption) VALUES ({refYesterday}, {round((resClosestDatasetTD-resClosestDatasetYD), 2)}))')
 #cur.execute(f"INSERT INTO daily_power (date, power_consumption) VALUES ('{refYesterday}', {round((resClosestDatasetTD-resClosestDatasetYD), 2)})")
