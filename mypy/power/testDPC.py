@@ -12,6 +12,11 @@ conn = psycopg.connect(os.environ.get('POSTGRES_CONNECT_DB_POWER'), row_factory=
 
 cur = conn.cursor()
 
+def checkTimestampValidity (databaseResultList):
+    for elem in json.loads(databaseResultList['val']):
+        print (elem)
+
+
 #today's 0:00h and yesterday's 0:00h
 todayTS = (datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)).timestamp()
 yesterdayTS = ((datetime.now()-timedelta(1)).replace(hour=0, minute=0, second=0, microsecond=0)).timestamp()
@@ -22,7 +27,7 @@ print (f'Yesterday\'s timestamp: {yesterdayTS}\n')
 #execute query to fetch the string with needed values. Limit to 6 results with timestamp range.
 cur.execute(f'(SELECT ts,val FROM ts_string WHERE ts BETWEEN {((int(yesterdayTS))-300)*1000} AND {((int(todayTS))+300)*1000} ORDER BY ts ASC LIMIT 3) UNION (SELECT ts,val FROM ts_string WHERE ts BETWEEN {((int(yesterdayTS))-300)*1000} AND {((int(todayTS))+300)*1000} ORDER BY ts DESC LIMIT 3);')
 
-print (f'SELECT query: (SELECT ts,val FROM ts_string WHERE ts BETWEEN {((int(yesterdayTS))-300)*1000} AND {((int(todayTS))+300)*1000} ORDER BY ts ASC LIMIT 3) UNION (SELECT ts,val FROM ts_string WHERE ts BETWEEN {((int(yesterdayTS))-300)*1000} AND {((int(todayTS))+300)*1000} ORDER BY ts DESC LIMIT 3);')
+print (f'SELECT query: (SELECT ts,val FROM ts_string WHERE ts BETWEEN {((int(yesterdayTS))-300)*1000} AND {((int(todayTS))+300)*1000} ORDER BY ts ASC LIMIT 3) UNION (SELECT ts,val FROM ts_string WHERE ts BETWEEN {((int(yesterdayTS))-300)*1000} AND {((int(todayTS))+300)*1000} ORDER BY ts DESC LIMIT 3);\n')
 
 allLines = cur.fetchall()
 
