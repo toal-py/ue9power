@@ -23,6 +23,10 @@ def checkTimestampValidity (databaseResultList):
         print (datetimeObject)
         print ((datetime.now()).day)
         print (((datetime.now()).day - datetimeObject.day) > 1)
+        if ((datetime.now()).day - datetimeObject.day) > 1:
+            databaseResultList.remove(elem)
+
+    return databaseResultList
 
 #today's 0:00h and yesterday's 0:00h
 todayTS = (datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)).timestamp()
@@ -40,7 +44,9 @@ allLines = cur.fetchall()
 
 print (f'Result from database: {allLines}\n')
 
-checkTimestampValidity(allLines)
+
+
+print (f'Result of cleaned list: {checkTimestampValidity(allLines)}')
 
 print ()
 
