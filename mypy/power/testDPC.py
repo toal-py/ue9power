@@ -39,7 +39,7 @@ allLines = cur.fetchall()
 
 print (len(allLines))
 
-#checkTimestampValidity(allLines)
+allValidLines = checkTimestampValidity(allLines)
 
 print ()
 
