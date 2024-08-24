@@ -32,6 +32,8 @@ def checkTimestampValidity (databaseResultList):
 todayTS = (datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)).timestamp()
 yesterdayTS = ((datetime.now()-timedelta(1)).replace(hour=0, minute=0, second=0, microsecond=0)).timestamp()
 
+print (8-4)
+
 print (f'Today\'s timestamp: {todayTS}\n')
 print (f'Yesterday\'s timestamp: {yesterdayTS - 360}\n')
 
