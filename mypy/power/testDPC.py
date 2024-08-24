@@ -16,7 +16,7 @@ def checkTimestampValidity (databaseResultList):
     for elem in databaseResultList:
         dictElem = json.loads(elem['val'])
         datetimeObject = datetime.strptime(dictElem['Time'], '%Y-%m-%dT%H:%M:%S')
-        if ((datetime.now()).day - datetimeObject.day) > 2:
+        if ((datetime.now()).day - datetimeObject.day) > 1:
             databaseResultList.remove(elem)
 
     return databaseResultList
@@ -39,7 +39,7 @@ allLines = cur.fetchall()
 
 print (len(allLines))
 
-checkTimestampValidity(allLines)
+#checkTimestampValidity(allLines)
 
 print ()
 
