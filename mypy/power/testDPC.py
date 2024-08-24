@@ -13,7 +13,8 @@ conn = psycopg.connect(os.environ.get('POSTGRES_CONNECT_DB_POWER'), row_factory=
 cur = conn.cursor()
 
 def checkTimestampValidity (databaseResultList):
-    for elem in json.loads(databaseResultList['val']):
+    dictValues = json.loads(databaseResultList)
+    for elem in dictValues['val']:
         print (elem)
 
 #today's 0:00h and yesterday's 0:00h
