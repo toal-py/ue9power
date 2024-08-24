@@ -7,6 +7,16 @@ from datetime import datetime, date, timedelta
 import cClasses
 
 dotenv.read_dotenv('/var/www/python-project/ue9power/.env')
+
+def checkTimestampValidity (databaseResultList):
+    for elem in databaseResultList:
+        dictElem = json.loads(elem['val'])
+        datetimeObject = datetime.strptime(dictElem['Time'], '%Y-%m-%dT%H:%M:%S')
+        if ((datetime.now()).day - datetimeObject.day) > 1:
+            databaseResultList.remove(elem)
+
+    return databaseResultList
+
 #connection with returning a dict. Basically obsolete as I could fetch 'val' in a tuple as well
 conn = psycopg.connect(os.environ.get('POSTGRES_CONNECT_DB_POWER'), row_factory=dict_row)
 
@@ -17,9 +27,11 @@ todayTS = (datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)).ti
 yesterdayTS = ((datetime.now()-timedelta(1)).replace(hour=0, minute=0, second=0, microsecond=0)).timestamp()
 
 #execute query to fetch the string with needed values. Limit to 6 results with timestamp range.
-cur.execute(f'(SELECT ts,val FROM ts_string WHERE ts BETWEEN {((int(yesterdayTS))-300)*1000} AND {((int(todayTS))+300)*1000} ORDER BY ts ASC LIMIT 3) UNION (SELECT ts,val FROM ts_string WHERE ts BETWEEN {((int(yesterdayTS))-300)*1000} AND {((int(todayTS))+300)*1000} ORDER BY ts DESC LIMIT 3);')
+cur.execute(f'SELECT ts,val FROM ts_string WHERE ts BETWEEN {((int(yesterdayTS))-300)*1000} AND {((int(todayTS))+300)*1000};')
 
 allLines = cur.fetchall()
+
+checkTimestampValidity(allLines)
 
 #create list of combination: timestamp + total_in.value
 dataSetList = []
