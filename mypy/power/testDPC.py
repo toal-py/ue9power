@@ -99,10 +99,11 @@ print (f'Reference date: {refYesterday}\n')
 print (f'SQL query: INSERT INTO daily_power (date, power_consumption) VALUES ({refYesterday}, {round((resClosestDatasetTD-resClosestDatasetYD), 2)}))')
 #cur.execute(f"INSERT INTO daily_power (date, power_consumption) VALUES ('{refYesterday}', {round((resClosestDatasetTD-resClosestDatasetYD), 2)})")
 #conn.commit()
-
+print()
 #get original values for logging purposes
-#logClosestDatasetTD = getClosestDataSet(dataSetList,resClosestTimestampTD,False)
-#logClosestDatasetYD = getClosestDataSet(dataSetList,resClosestTimestampYD,False)
+print(getClosestDataSet(dataSetList,resClosestTimestampTD,False))
+print()
+print(getClosestDataSet(dataSetList,resClosestTimestampYD,False))
 
 #logging of original values to be able to check validity of result written to database
 #dailylog = cClasses.logging(resClosestDatasetTD,resClosestDatasetYD,logClosestDatasetTD,logClosestDatasetYD,refYesterday)
