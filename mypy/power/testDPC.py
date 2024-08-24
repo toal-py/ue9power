@@ -14,15 +14,8 @@ cur = conn.cursor()
 
 def checkTimestampValidity (databaseResultList):
     for elem in databaseResultList:
-        print (elem['val'])
-        print (type(elem['val']))
         dictElem = json.loads(elem['val'])
-        print (type(dictElem))
-        print (dictElem['Time'])
         datetimeObject = datetime.strptime(dictElem['Time'], '%Y-%m-%dT%H:%M:%S')
-        print (datetimeObject)
-        print ((datetime.now()).day)
-        print (((datetime.now()).day - datetimeObject.day) > 1)
         if ((datetime.now()).day - datetimeObject.day) > 1:
             databaseResultList.remove(elem)
 
@@ -36,9 +29,9 @@ print (f'Today\'s timestamp: {todayTS}\n')
 print (f'Yesterday\'s timestamp: {yesterdayTS}\n')
 
 #execute query to fetch the string with needed values. Limit to 6 results with timestamp range.
-cur.execute(f'SELECT ts,val FROM ts_string WHERE ts BETWEEN {((int(yesterdayTS)) - 360)*1000} AND {((int(todayTS))+360)*1000};')
+cur.execute(f'SELECT ts,val FROM ts_string WHERE ts BETWEEN {((int(yesterdayTS))-360)*1000} AND {((int(todayTS))+360)*1000};')
 
-print (f'SELECT query: SELECT ts,val FROM ts_string WHERE ts BETWEEN {((int(yesterdayTS)) - 360)*1000} AND {((int(todayTS))+360)*1000};\n')
+print (f'SELECT query: SELECT ts,val FROM ts_string WHERE ts BETWEEN {((int(yesterdayTS))-360)*1000} AND {((int(todayTS))+360)*1000};\n')
 
 allLines = cur.fetchall()
 
