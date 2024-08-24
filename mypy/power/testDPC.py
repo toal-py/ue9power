@@ -19,7 +19,7 @@ def checkTimestampValidity (databaseResultList):
         dictElem = json.loads(elem['val'])
         print (type(dictElem))
         print (dictElem['Time'])
-        datetimeObject = datetime.strptime(dictElem['Time'])
+        datetimeObject = datetime.strptime(dictElem['Time'], '%Y-%m-%d')
         print (datetimeObject)
         print (datetime.now() - datetimeObject)
 
