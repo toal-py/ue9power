@@ -35,9 +35,9 @@ print (f'SELECT query: SELECT ts,val FROM ts_string WHERE ts BETWEEN {((int(yest
 
 allLines = cur.fetchall()
 
-print (f'Result from database: {allLines}\n')
+#print (f'Result from database: {allLines}\n')
 
-
+print (len(allLines))
 
 checkTimestampValidity(allLines)
 
@@ -51,7 +51,7 @@ for elem in allLines:
     listTsVal = [(elem['ts']/1000.0), elemDict['Haus']['total_in'], elem['val']]
     dataSetList.append(listTsVal)
 
-print (f'List of datasets: {dataSetList}\n')
+#print (f'List of datasets: {dataSetList}\n')
     
 #create list of only timestamps to use in following min() function.
 timestampList = []
@@ -60,7 +60,7 @@ for elem in allLines:
     listTs = (elem['ts']/1000.0)
     timestampList.append(listTs)
 
-print (f'List of timestamps: {timestampList}\n')
+#print (f'List of timestamps: {timestampList}\n')
 
 #find closest timestamp via function
 def getClosestTimestamp (list,ts):
