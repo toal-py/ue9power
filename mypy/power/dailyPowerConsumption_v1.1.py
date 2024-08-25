@@ -12,7 +12,8 @@ def checkTimestampValidity (databaseResultList):
     for elem in databaseResultList:
         dictElem = json.loads(elem['val'])
         datetimeObject = datetime.strptime(dictElem['Time'], '%Y-%m-%dT%H:%M:%S')
-        if ((datetime.now()).day - datetimeObject.day) > 1:
+
+        if ((datetime.now()) - datetimeObject) > timedelta(days=1):
             databaseResultList.remove(elem)
 
     return databaseResultList
@@ -24,7 +25,7 @@ cur = conn.cursor()
 
 #today's 0:00h and yesterday's 0:00h
 todayTS = (datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)).timestamp()
-yesterdayTS = ((datetime.now()-timedelta(1)).replace(hour=0, minute=0, second=0, microsecond=0)).timestamp()
+yesterdayTS = ((datetime.now()-timedelta(days=1)).replace(hour=0, minute=0, second=0, microsecond=0)).timestamp()
 
 #execute query to fetch the string with needed values.
 cur.execute(f'SELECT ts,val FROM ts_string WHERE ts BETWEEN {((int(yesterdayTS))-300)*1000} AND {((int(todayTS))+300)*1000};')
