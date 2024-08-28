@@ -63,8 +63,20 @@ function getCurrentUsage (){
     <u>Hochrechnung für den laufenden Monat</u>: {{ extrapolationCurrentMonth }} kWh bei weiterhin ähnlichem Verbrauch ({{ compLastMonthPercent }} %*{% if compLastMonth < 0 %} weniger{% else %} mehr{% endif %} als letzten Monat).
     </p>
     <p><small>*normalisiert an die Anzahl der Tage des Vormonats.</small></p>
+    <u>Aktueller Durchschnittsverbrauch</u>:
     <p>
-    <u>Aktueller Durchschnittsverbrauch</u>: {{ currentMeanValue }} kWh/Tag
+    <div style="height: 32px; display: flex; align-items: center; justify-items: center;">
+    {{ currentMeanValue }} kWh/Tag {% if meanValueYesterday %} 
+    {% if currentMeanValue > meanValueYesterday %}
+    <img src="/static/arrow-up-right.png">
+    {% elif currentMeanValue == meanValueYesterday %}
+    <img src="/static/arrow-right.png">
+    {% else %}
+    <img src="/static/arrow-down-right.png">
+    {% endif %}
+    (gestern: {{ meanValueYesterday }} kWh/Tag)    
+    {% endif %}
+    </div>
     </p>
 
 </p>

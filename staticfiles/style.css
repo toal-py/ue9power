@@ -21,7 +21,6 @@ body {
     float: left;
     width: 100%;
   }
-  
 
 .navbar {
 overflow: hidden;
@@ -30,7 +29,6 @@ position: fixed;
 top: 0;
 width: 100%;
 }
-
 
 .navbar a {
 float: left;

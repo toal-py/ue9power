@@ -12,6 +12,7 @@ from psycopg import sql
 import pandas as pd
 import math
 import os
+import redis
 from multiprocessing import Pool
 from django.views.decorators.cache import cache_page
 
@@ -23,7 +24,7 @@ def homeView(request):
     htmlString = "<h1>Hello World</h1><p><a href='/power'>Hier geht es zum letzten Stromverbrauch</a></p>" 
     return HttpResponse(htmlString)
 
-@cache_page(21600)
+#@cache_page(21600)
 @ensure_csrf_cookie
 def powerOverview (request):
     dotenv.read_dotenv('/var/www/python-project/ue9power/.env')
@@ -102,6 +103,43 @@ def powerOverview (request):
         meanValue = mean / numberOfDays
         return round(meanValue,2)
 
+
+    #save mean value to Redis. 1 day = 86400 seconds
+
+    def saveMeanValueToRedis(url, date):
+        r = redis.from_url(url)
+
+        value = getCurrentMeanValue()
+
+        if not r.get(date):
+            r.set(name = date, value = value if dayOfMonth != 1 else None, ex = 86400)
+        else:
+            print (f'Mean value ({value}) for date {date} already stored. Will expire in {timedelta(seconds=r.ttl(date))}.')
+
+        r.quit()
+    
+    def getMeanValueYesterdayFromRedis(url, date):
+        r = redis.from_url(url)
+        
+        valueB = r.get(date)
+
+        if valueB:
+            value = float(valueB.decode('utf8'))
+        else:
+            value = None
+            print (f'Could not find value for date {date} in Redis.')
+
+        r.quit()
+
+        return value
+    
+    if os.name == 'nt':
+        redisUrl = 'redis://192.168.178.61:6379'
+    else:
+        redisUrl = 'redis://redis:6379'
+
+    saveMeanValueToRedis(redisUrl, date.today().strftime('%d.%m.%Y'))
+
     #current month for title of visualization
 
     monthList = ['dummy', 'Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember']
@@ -116,6 +154,7 @@ def powerOverview (request):
         'mPower':mPower,
         'extrapolationCurrentMonth':'{:.2f}'.format(ep),
         'currentMeanValue': getCurrentMeanValue() if dayOfMonth != 1 else None,
+        'meanValueYesterday': getMeanValueYesterdayFromRedis(redisUrl, (date.today()-timedelta(1)).strftime('%d.%m.%Y')),
         'compLastMonthPercent':round((abs(clm) * 100), 2),
         'compLastMonth':clm,
         'plot':plot if dayOfMonth != 1 else None,
@@ -319,7 +358,8 @@ def currentDayAPI(request):
         dataStartOfDay = json.loads(resultStartOfDay[0])
 
         usageUpToNow = dataNow['Haus']['total_in'] - dataStartOfDay['Haus']['total_in']
-        
+        print (dataNow)
+        print (dataStartOfDay)
         return round(usageUpToNow, 2)
 
     context = {'currentDayUsage': getUsageUpToNow(postData['currentTimestamp'])}
