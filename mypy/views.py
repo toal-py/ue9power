@@ -23,8 +23,8 @@ from mypy.createDataForPlotPage import createDataForPlotPage
 def homeView(request):
     htmlString = "<h1>Hello World</h1><p><a href='/power'>Hier geht es zum letzten Stromverbrauch</a></p>" 
     return HttpResponse(htmlString)
-
-#@cache_page(21600)
+#caching
+@cache_page(21600)
 @ensure_csrf_cookie
 def powerOverview (request):
     dotenv.read_dotenv('/var/www/python-project/ue9power/.env')
@@ -104,7 +104,7 @@ def powerOverview (request):
         return round(meanValue,2)
 
 
-    #save mean value to Redis. 1 day = 86400 seconds
+    #save mean value to Redis. 2 days = 172800 seconds
 
     def saveMeanValueToRedis(url, date):
         r = redis.from_url(url)
@@ -112,7 +112,7 @@ def powerOverview (request):
         value = getCurrentMeanValue()
 
         if not r.get(date):
-            r.set(name = date, value = value if dayOfMonth != 1 else None, ex = 86400)
+            r.set(name = date, value = value if dayOfMonth != 1 else None, ex = 172800)
         else:
             print (f'Mean value ({value}) for date {date} already stored. Will expire in {timedelta(seconds=r.ttl(date))}.')
 
