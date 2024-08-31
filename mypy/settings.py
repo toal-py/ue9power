@@ -34,7 +34,7 @@ ALLOWED_HOSTS = [
     '192.168.178.74'
 ]
 
-CSRF_TRUSTED_ORIGINS = ['https://web.toal.wtf']
+CSRF_TRUSTED_ORIGINS = ['https://web.toal.wtf', 'http://192.168.178.61']
 
 # Application definition
 
