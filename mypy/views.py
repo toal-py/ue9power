@@ -358,11 +358,8 @@ def currentDayAPI(request):
         dataStartOfDay = json.loads(resultStartOfDay[0])
 
         usageUpToNow = dataNow['Haus']['total_in'] - dataStartOfDay['Haus']['total_in']
-        print (dataNow)
-        print (dataStartOfDay)
-        return round(usageUpToNow, 2), dataNow, dataStartOfDay
-    
-    currentUsageList = getUsageUpToNow(postData['currentTimestamp'])
 
-    context = {'currentDayUsage': currentUsageList[0], 'dataCurrentDayUsage': currentUsageList[1:]}
+        return round(usageUpToNow, 2) 
+
+    context = {'currentDayUsage': getUsageUpToNow(postData['currentTimestamp'])}
     return render(request, 'currentDayUsageResult.html', context = context)
