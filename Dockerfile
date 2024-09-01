@@ -21,7 +21,7 @@ WORKDIR /dsh/
 
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
-RUN bash TZ='Europe/Berlin' && export TZ
+#RUN TZ='Europe/Berlin' && export TZ
 
 COPY . .
 COPY .env /var/www/python-project/ue9power/
