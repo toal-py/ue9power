@@ -5,6 +5,7 @@ import json
 from django.shortcuts import render
 from django.views.decorators.csrf import ensure_csrf_cookie
 from datetime import datetime, date, timedelta
+from zoneinfo import ZoneInfo
 import calendar
 import dotenv
 import psycopg
@@ -342,7 +343,7 @@ def currentDayAPI(request):
     
     def getUsageUpToNow(timestamp):
 
-        todayTS = ((datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)).timestamp() * 1000)
+        todayTS = ((datetime.now(ZoneInfo('Europe/Berlin')).replace(hour=0, minute=0, second=0, microsecond=0)).timestamp() * 1000)
         conn = psycopg.connect(os.environ.get('POSTGRES_VIEWS'))
         cur = conn.cursor()
         #cur.execute(f'SELECT val FROM ts_string WHERE ts BETWEEN {(int(timestamp) - 300000)} AND {(int(timestamp) + 30000)} ORDER BY ABS(ts - {int(timestamp)}) ASC;')
@@ -352,7 +353,7 @@ def currentDayAPI(request):
         resultStartOfDay = cur.fetchone()
         cur.close()
         conn.close()
-        
+
         dataNow = json.loads(resultNow[0])
         dataStartOfDay = json.loads(resultStartOfDay[0])
 
