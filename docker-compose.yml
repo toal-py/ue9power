@@ -7,9 +7,7 @@ services:
     expose:
       - 8000
     env_file:
-      - ./.env    
-    environment:
-      - TZ='Europe/Berlin'
+      - ./.env
     depends_on:
       - db
   db:
