@@ -48,21 +48,7 @@ def powerOverview (request):
     dayOfMonth = date.today().day
 
     #current month data
-    cm = json.loads(apiCall(mode = 'm', dates = ((date.today()-timedelta(1)).strftime('%d.%m.%Y'))))
-
-    #plot
-    if dayOfMonth != 1:
-        shortFormatDays = {elem[0][-10:-8]:elem[1] for elem in cm['result'].items()}
-       
-        plot = plotMonthlyOverview(shortFormatDays, math.ceil(ceiling[0]))
-
-        shareValues = getShareValues(data = cm['result'], fullMonth = False, altLength = len(cm['result']))
-
-        sharePlot = plotMonthlyShare(shareValues)
-    else:
-        pass
-
-    
+    cm = json.loads(apiCall(mode = 'm', dates = ((date.today()-timedelta(1)).strftime('%d.%m.%Y'))))    
 
     def extrapolation(x):
         try:
@@ -114,7 +100,7 @@ def powerOverview (request):
         if not r.get(date):
             r.set(name = date, value = value if dayOfMonth != 1 else None, ex = 172800)
         else:
-            print (f'Mean value ({value}) for date {date} already stored. Will expire in {timedelta(seconds=r.ttl(date))}.')
+            print (f'{datetime.now()}: Mean value ({value}) for date {date} already stored. Will expire in {timedelta(seconds=r.ttl(date))}.')
 
         r.quit()
     
@@ -127,7 +113,7 @@ def powerOverview (request):
             value = float(valueB.decode('utf8'))
         else:
             value = None
-            print (f'Could not find value for date {date} in Redis.')
+            print (f'{datetime.now()}: Could not find value for date {date} in Redis.')
 
         r.quit()
 
@@ -138,7 +124,20 @@ def powerOverview (request):
     else:
         redisUrl = 'redis://redis:6379'
 
-    saveMeanValueToRedis(redisUrl, date.today().strftime('%d.%m.%Y'))
+    if dayOfMonth != 1:
+        shortFormatDays = {elem[0][-10:-8]:elem[1] for elem in cm['result'].items()}
+       
+        plot = plotMonthlyOverview(shortFormatDays, math.ceil(ceiling[0]))
+
+        shareValues = getShareValues(data = cm['result'], fullMonth = False, altLength = len(cm['result']))
+
+        sharePlot = plotMonthlyShare(shareValues)
+
+        saveMeanValueToRedis(redisUrl, date.today().strftime('%d.%m.%Y'))
+    else:
+        pass
+
+    
 
     #current month for title of visualization
 
