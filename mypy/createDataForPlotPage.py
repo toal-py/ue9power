@@ -3,7 +3,7 @@ def createDataForPlotPage(elem, ceiling):
     import calendar
     import json
     from mypy.apiInternal import apiCall
-    from mypy.plotView import plotMonthlyOverview, plotMonthlyShare, getShareValues
+    from mypy.plotView import plotMonthlyOverview, plotMonthlyShare, getShareValues, collectSaturdaysAndSundays
     monthNames = ['dummy', 'Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember']
     singlePlot = json.loads(apiCall(mode = 'm', dates = elem[0:2], year = elem[3:], expand = True))
     dom = calendar.monthrange(int(elem[3:]), int(elem[0:2]))[1]
@@ -11,7 +11,10 @@ def createDataForPlotPage(elem, ceiling):
     sharesList = plotMonthlyShare(shareValues)
     #plot monthly overview
     shortFormatDays = {elem[0][-10:-8] : elem[1] for elem in singlePlot['result']['days'].items()}
-    plotList = plotMonthlyOverview(shortFormatDays, math.ceil(ceiling))
+
+    saturdays = collectSaturdaysAndSundays(int(elem[0:2]), int(elem[3:]))[0]
+    sundays = collectSaturdaysAndSundays(int(elem[0:2]), int(elem[3:]))[1]
+    plotList = plotMonthlyOverview(shortFormatDays, math.ceil(ceiling), saturdays, sundays)
 
     #titles for individual month
     monthList = monthNames[int(elem[0:2])]

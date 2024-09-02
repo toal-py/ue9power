@@ -7,8 +7,24 @@ import pandas as pd
 import calendar
 from datetime import date
 
+def collectSaturdaysAndSundays(month, year):
+    numberOfDays = calendar.monthrange(year, month)[1]
+    
+    saturdays = []
+    sundays = []
 
-def plotMonthlyOverview(data, ceiling):
+    i = 1
+    while i <= numberOfDays:
+        if calendar.weekday(year, month, i) == calendar.SATURDAY:
+            saturdays.append(str(i).zfill(2))
+        elif calendar.weekday(year, month, i) == calendar.SUNDAY:
+            sundays.append(str(i).zfill(2))
+        
+        i += 1
+
+    return saturdays, sundays
+
+def plotMonthlyOverview(data, ceiling, saturdays, sundays):
     matplotlib.use('agg')
     colorPal = ['tab:red' if elem >= 10.0 else 'tab:orange' if elem >= 8.0 else 'yellow' if elem >= 6.0 else 'tab:green' if elem >= 4.0 else 'lightgreen' for elem in data.values()]
     power = [float(elem) for elem in data.values()]
@@ -22,6 +38,15 @@ def plotMonthlyOverview(data, ceiling):
 
     for bar in plot.containers:
         plot.bar_label(bar, fontsize=8)
+
+    for day in plot.get_xticklabels():
+        if day.get_text() in saturdays:
+            day.set_color('skyblue')
+        elif day.get_text() in sundays:
+            day.set_color('steelblue')
+        else:
+            pass
+
     plotFile = BytesIO()
     plotFigure.set_figwidth(10)    
     plotFigure.savefig(plotFile, format='png', bbox_inches='tight')

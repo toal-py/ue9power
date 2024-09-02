@@ -18,7 +18,7 @@ from multiprocessing import Pool
 from django.views.decorators.cache import cache_page
 
 from mypy.apiInternal import apiCall
-from mypy.plotView import plotMonthlyOverview, plotComparison, getShareValues, plotMonthlyShare
+from mypy.plotView import plotMonthlyOverview, plotComparison, getShareValues, plotMonthlyShare, collectSaturdaysAndSundays
 from mypy.createDataForPlotPage import createDataForPlotPage
 
 def homeView(request):
@@ -127,8 +127,11 @@ def powerOverview (request):
 
     if dayOfMonth != 1:
         shortFormatDays = {elem[0][-10:-8]:elem[1] for elem in cm['result'].items()}
+
+        saturdays = collectSaturdaysAndSundays(date.today().month, date.today().year)[0]
+        sundays = collectSaturdaysAndSundays(date.today().month, date.today().year)[1]
        
-        plot = plotMonthlyOverview(shortFormatDays, math.ceil(ceiling[0]))
+        plot = plotMonthlyOverview(shortFormatDays, math.ceil(ceiling[0]), saturdays, sundays)
 
         shareValues = getShareValues(data = cm['result'], fullMonth = False, altLength = len(cm['result']))
 
