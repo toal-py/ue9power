@@ -17,13 +17,17 @@ def getCurrentIPv6():
 def updateIPv6(ipv6,token):
     if ipv6 is not None:
         r = requests.get(f'https://dynv6.com/api/update?hostname=web.toal.wtf&token={token}&ipv6={ipv6}')
-        print ('Success!')
+
         if r.status_code != 200:
             errMessage = f'Could\'nt update IPv6 address. \n HTTP Error Code: {r.status_code}. \n Error Message: {r.text}.'
             errSubject = 'Error: Could\'nt update IPv6 address'
             err = cClasses.mailing(errMessage,errSubject)
             err.sendMail()
             print (f'That didn\'t work. \n HTTP Error Code: {r.status_code}. \n Error Message: {r.text}.')
+        elif r.status_code == 200:
+            print ('Success!')
+        else:
+            pass
     else:
         errMessage = 'Could\'nt update IPv6 address. No connection to online service.'
         errSubject = 'Error: Could\'nt update IPv6 address'    
