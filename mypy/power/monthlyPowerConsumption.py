@@ -1,6 +1,6 @@
 import psycopg
 import calendar
-from datetime import datetime,date,timedelta
+from datetime import date,timedelta
 import dotenv
 import os
 import cClasses

@@ -38,8 +38,8 @@ def powerOverview (request):
     w = cur.fetchone()
     cur.execute('SELECT month_year,power_consumption FROM monthly_power ORDER BY id DESC LIMIT 1;')
     m = cur.fetchone()
-    month = m[0] if (m) else 'Bisher kein Monat in der DB'
-    mPower = m[1] if (m) else 'Bisher keine Daten in der DB'
+    cur.execute('SELECT year,power_consumption FROM yearly_power ORDER BY id DESC LIMIT 1;')
+    y = cur.fetchone()
     cur.execute('SELECT power_consumption FROM daily_power ORDER BY power_consumption DESC LIMIT 1;')
     ceiling = cur.fetchone()
     cur.close()
@@ -75,7 +75,7 @@ def powerOverview (request):
 
         return adjmp
     
-    normMPower = adjustMPower(mPower)
+    normMPower = adjustMPower(m[1])
 
     clm = 1 - (normMPower / float(ep))
 
@@ -153,8 +153,10 @@ def powerOverview (request):
         'dPower':d[1],
         'week':w[0],
         'wPower':w[1],
-        'month':month,
-        'mPower':mPower,
+        'month':m[0],
+        'mPower':m[1],
+        'year': y[0] if y else None,
+        'mYear': y[1] if y else None,
         'extrapolationCurrentMonth':'{:.2f}'.format(ep),
         'currentMeanValue': getCurrentMeanValue() if dayOfMonth != 1 else None,
         'meanValueYesterday': getMeanValueYesterdayFromRedis(redisUrl, (date.today()-timedelta(1)).strftime('%d.%m.%Y')),
