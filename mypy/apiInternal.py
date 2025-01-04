@@ -11,7 +11,7 @@ def apiCall(mode:str, dates:str = ((date.today()-timedelta(1)).strftime('%d.%m.%
     if len(dates) == 10 and bool(re.match('^(3[01]|[12][0-9]|0[1-9]).(0[1-9]|1[012]).(202[0-9]|203[0-9])$', dates)):
         year = dates[-4:]
     else:
-        year = (date.today().year)
+        year = year
 
     def checkDateValidity(m,d):
         if m == 'm':
@@ -43,7 +43,7 @@ def apiCall(mode:str, dates:str = ((date.today()-timedelta(1)).strftime('%d.%m.%
             return False
         
     def checkIsPastDate(m,d,y):
-        if int(y) < date.today().year:
+        if int(y) < 2024:
             if any([(len(d) == 10 and bool(re.match('^(3[01]|[12][0-9]|0[1-9]).(0[1-9]|1[012]).(202[0-9]|203[0-9])$', d)) and int(d[-7:-5]) < 12), (len(d) == 2 and bool(re.match('^(0[1-9]|1[012])$', d)) and int(d) < 12), (len(d) == 1 and bool(re.match('^([1-9]|1[012])$', d)) and int(d) < 12)]):
                 return True
             elif m == 'd' and bool(re.match('^(3[01]|[12][0-9]|0[1-9]).(0[1-9]|1[012]).(202[0-9]|203[0-9])$', d)) and int(d[-10:-8]) < 11:
