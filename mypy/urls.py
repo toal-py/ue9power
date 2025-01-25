@@ -19,6 +19,7 @@ from django.urls import path
 
 from .views import homeView, powerOverview, plotPage, comparisonPage, comparisonAPI, currentDayAPI
 from mypy.apiView import powerApi
+from mypy.power.absenceReporting import absenceReporting
 
 urlpatterns = [
     path('', homeView),
@@ -28,5 +29,6 @@ urlpatterns = [
     path('power/plots', plotPage),
     path('power/comparison', comparisonPage),
     path('power/comparison/api', comparisonAPI, name = 'comparisonAPI'),
-    path('power/api/current', currentDayAPI, name = 'currentDayAPI')
+    path('power/api/current', currentDayAPI, name = 'currentDayAPI'),
+    path('power/button1', absenceReporting)
 ]
