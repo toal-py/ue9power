@@ -6,11 +6,12 @@ import psycopg
 import os
 import sys
 import json
-import cClasses
+
 
 dotenv.read_dotenv('/var/www/python-project/ue9power/.env')
 sys.path.append('/var/www/python-project/ue9power/mypy')
 from apiInternal import apiCall
+from mypy.power.cClasses import mailing
 
 def absenceReporting():
 
@@ -63,5 +64,7 @@ def absenceReporting():
     '''
     mailSubject = f'Abwesenheitsreport für {d[0]}'
 
-    absenceReport = cClasses.mailing(mailContent, mailSubject)
+    absenceReport = mailing(mailContent, mailSubject)
     absenceReport.sendMail()
+
+absenceReporting()
