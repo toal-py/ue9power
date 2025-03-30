@@ -1,4 +1,4 @@
-FROM python:3.12-slim
+FROM python:3.12:0
 
 # install cmake
 #WORKDIR /root
